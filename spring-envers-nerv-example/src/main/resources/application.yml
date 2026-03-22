@@ -1,7 +1,13 @@
+logging:
+  level:
+    root: info
+    liquibase: DEBUG
+    org.springframework.boot.autoconfigure.liquibase: DEBUG
+
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/nerv-example}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/nerv-example?currentSchema=envers}
     driver-class-name: org.postgresql.Driver
     username: nerv
     password: nerv
@@ -16,11 +22,15 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
-      org.hibernate.envers.audit_strategy: org.hibernate.envers.strategy.ValidityAuditStrategy
+      hibernate.default_schema: envers
   liquibase:
-    change-log: db/changelog/db.changelog-master.xml
+    enabled: true
+    default-schema: envers
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    fail-on-error: true
+    drop-first: true
 
 nerv:
   audit:
