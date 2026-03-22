@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet author="czetsuya (generated)" id="1774170688829-1">
+    <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50"
+        maxValue="9223372036854775807" minValue="1" sequenceName="revinfo_seq" startValue="1"/>
+  </changeSet>
+  <changeSet author="czetsuya (generated)" id="1774170688829-2">
+    <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1"
+        maxValue="9223372036854775807" minValue="1" sequenceName="user_seq" startValue="1"/>
+  </changeSet>
+  <changeSet author="czetsuya (generated)" id="1774170688829-3">
+    <createTable tableName="revinfo">
+      <column name="rev" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="revinfo_pkey"/>
+      </column>
+      <column name="revtstmp" type="BIGINT"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="czetsuya (generated)" id="1774170688829-4">
+    <createTable tableName="user_account">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_account_pkey"/>
+      </column>
+      <column name="birth_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+      <column name="first_name" type="VARCHAR(255)"/>
+      <column name="last_name" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="czetsuya (generated)" id="1774170688829-5">
+    <createTable tableName="user_hobby">
+      <column name="user_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="hobby" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="czetsuya (generated)" id="1774170688829-6">
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_hobby"
+        constraintName="fkd01r6bl5luvtyr812srij1rsc" deferrable="false" initiallyDeferred="false"
+        onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+        referencedTableName="user_account" validate="true"/>
+  </changeSet>
+  <changeSet id="002-create-user-audit-table-1" author="czetsuya">
+    <createTable tableName="user_account_aud">
+      <column name="id" type="bigint"></column>
+      <column name="revision_no" type="bigint"></column>
+      <column name="revision_type" type="bigint"></column>
+      <column name="updated_by" type="varchar(255)"></column>
+      <column name="updated" type="timestamp"></column>
+      <column name="field_name" type="varchar(255)"></column>
+      <column name="old_value" type="varchar(255)"></column>
+      <column name="new_value" type="varchar(255)"></column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
