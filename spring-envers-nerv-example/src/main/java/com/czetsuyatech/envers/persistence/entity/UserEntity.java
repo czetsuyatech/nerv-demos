@@ -28,7 +28,7 @@ import org.hibernate.envers.Audited;
 @Data
 @Entity
 @Table(name = "user_account")
-@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 50)
 @Audited
 public class UserEntity implements Serializable {
 

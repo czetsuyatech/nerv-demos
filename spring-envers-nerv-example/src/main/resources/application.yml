@@ -17,9 +17,9 @@ spring:
       minimum-idle: 10
       pool-name: ct-pool
   jpa:
-#    defer-datasource-initialization: true
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         default_schema: nervaudit
@@ -28,7 +28,7 @@ spring:
     generate-ddl: true
 
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/db.changelog-master.xml
     default-schema: nervaudit
     liquibase-schema: nervaudit

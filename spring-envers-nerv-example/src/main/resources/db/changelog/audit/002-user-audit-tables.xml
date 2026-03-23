@@ -1,0 +1,67 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <!-- ========================= -->
+  <!-- SEQUENCES -->
+  <!-- ========================= -->
+
+  <changeSet id="001-seq-revinfo" author="edward">
+    <createSequence sequenceName="revinfo_seq"
+        schemaName="${schemaName}"
+        startValue="1"
+        incrementBy="50"/>
+  </changeSet>
+
+  <!-- ========================= -->
+  <!-- AUDIT TABLES -->
+  <!-- ========================= -->
+
+  <changeSet id="007-user-account-aud" author="edward">
+    <createTable tableName="user_account_aud" schemaName="${schemaName}">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rev" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="revtype" type="SMALLINT"/>
+      <column name="updated_by" type="VARCHAR(255)"/>
+      <column name="updated" type="TIMESTAMP"/>
+      <column name="field_name" type="VARCHAR(255)"/>
+      <column name="old_value" type="VARCHAR(255)"/>
+      <column name="new_value" type="VARCHAR(255)"/>
+
+    </createTable>
+
+    <addPrimaryKey
+        tableName="user_account_aud"
+        schemaName="${schemaName}"
+        columnNames="id, rev"
+        constraintName="pk_user_account_aud"/>
+  </changeSet>
+
+  <changeSet id="008-user-account-aud-fk-rev" author="edward">
+    <addForeignKeyConstraint
+        baseTableName="user_account_aud"
+        baseTableSchemaName="${schemaName}"
+        baseColumnNames="rev"
+        referencedTableName="revinfo"
+        referencedTableSchemaName="${schemaName}"
+        referencedColumnNames="rev"
+        constraintName="fk_user_aud_revinfo"/>
+  </changeSet>
+
+  <!-- Optional but recommended -->
+  <changeSet id="009-user-account-aud-index" author="edward">
+    <createIndex indexName="idx_user_account_aud_rev"
+        tableName="user_account_aud"
+        schemaName="${schemaName}">
+      <column name="rev"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

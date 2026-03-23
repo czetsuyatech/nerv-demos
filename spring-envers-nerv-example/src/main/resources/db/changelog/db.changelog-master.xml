@@ -15,7 +15,7 @@
   </changeSet>
 
   <!-- Include other changelogs -->
-  <include file="001-initial-schema.xml" relativeToChangelogFile="true"/>
-  <include file="002-user-audit-tables.xml" relativeToChangelogFile="true"/>
+  <include file="core/001-initial-schema.xml" relativeToChangelogFile="true"/>
+  <include file="audit/002-user-audit-tables.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -108,6 +108,22 @@
           </excludes>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <version>${liquibase.version}</version>
+        <configuration>
+          <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
+          <outputChangeLogFile>src/main/resources/db/changelog/changelog_generated.xml
+          </outputChangeLogFile>
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgresql://localhost:5432/nerv-examples</url>
+          <username>nerv</username>
+          <password>nerv</password>
+          <defaultSchemaName>nervaudit</defaultSchemaName>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

@@ -4,7 +4,6 @@ import com.czetsuyatech.audit.config.EnableNervAudit;
 import com.czetsuyatech.envers.persistence.entity.EntityConfig;
 import javax.sql.DataSource;
 import liquibase.integration.spring.SpringLiquibase;
-import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jpa.EntityManagerFactoryBuilder;
@@ -22,7 +21,7 @@ public class InfrastructureConfig {
    */
   @Bean
   @ConditionalOnMissingBean
-  public SpringLiquibase liquibase(DataSource dataSource, MyLiquibaseProperties props) {
+  public SpringLiquibase liquibase(DataSource dataSource, NervLiquibaseProperties props) {
 
     SpringLiquibase liquibase = new SpringLiquibase();
     liquibase.setDataSource(dataSource);
@@ -36,8 +35,11 @@ public class InfrastructureConfig {
   @Bean
   @DependsOn("liquibase")
   public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-      EntityManagerFactoryBuilder builder, DataSource dataSource) {
-    return builder
+      EntityManagerFactoryBuilder emfBuilder,
+      DataSource dataSource
+  ) {
+
+    return emfBuilder
         .dataSource(dataSource)
         .packages(EntityConfig.class)
         .build();
@@ -48,19 +50,7 @@ public class InfrastructureConfig {
    */
   @Bean
   @ConfigurationProperties(prefix = "spring.liquibase")
-  public MyLiquibaseProperties liquibaseProperties() {
-    return new MyLiquibaseProperties();
-  }
-
-  /**
-   * Custom properties class for Spring Boot 4.
-   */
-  @Data
-  public static class MyLiquibaseProperties {
-
-    private String changeLog = "classpath:db/changelog/db.changelog-master.yaml";
-    private String contexts = "default,dev,prod";
-    private String defaultSchema = "nervaudit";
-    private boolean enabled = true;
+  public NervLiquibaseProperties liquibaseProperties() {
+    return new NervLiquibaseProperties();
   }
 }
