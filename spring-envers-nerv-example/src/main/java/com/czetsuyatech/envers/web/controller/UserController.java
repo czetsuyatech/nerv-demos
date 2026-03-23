@@ -1,4 +1,4 @@
-package com.czetsuyatech.envers.controller;
+package com.czetsuyatech.envers.web.controller;
 
 import com.czetsuyatech.envers.persistence.entity.UserEntity;
 import com.czetsuyatech.envers.service.UserService;
