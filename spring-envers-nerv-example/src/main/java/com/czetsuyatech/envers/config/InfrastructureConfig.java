@@ -1,10 +1,66 @@
 package com.czetsuyatech.envers.config;
 
 import com.czetsuyatech.audit.config.EnableNervAudit;
+import com.czetsuyatech.envers.persistence.entity.EntityConfig;
+import javax.sql.DataSource;
+import liquibase.integration.spring.SpringLiquibase;
+import lombok.Data;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jpa.EntityManagerFactoryBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @Configuration
 @EnableNervAudit
 public class InfrastructureConfig {
 
+  /**
+   * Liquibase configuration bean. Automatically runs on application startup.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  public SpringLiquibase liquibase(DataSource dataSource, MyLiquibaseProperties props) {
+
+    SpringLiquibase liquibase = new SpringLiquibase();
+    liquibase.setDataSource(dataSource);
+    liquibase.setChangeLog(props.getChangeLog());
+    liquibase.setContexts(props.getContexts());
+    liquibase.setDefaultSchema(props.getDefaultSchema());
+    liquibase.setShouldRun(props.isEnabled());
+    return liquibase;
+  }
+
+  @Bean
+  @DependsOn("liquibase")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+      EntityManagerFactoryBuilder builder, DataSource dataSource) {
+    return builder
+        .dataSource(dataSource)
+        .packages(EntityConfig.class)
+        .build();
+  }
+
+  /**
+   * Custom Liquibase properties class to replace the removed Spring Boot 4 LiquibaseProperties.
+   */
+  @Bean
+  @ConfigurationProperties(prefix = "spring.liquibase")
+  public MyLiquibaseProperties liquibaseProperties() {
+    return new MyLiquibaseProperties();
+  }
+
+  /**
+   * Custom properties class for Spring Boot 4.
+   */
+  @Data
+  public static class MyLiquibaseProperties {
+
+    private String changeLog = "classpath:db/changelog/db.changelog-master.yaml";
+    private String contexts = "default,dev,prod";
+    private String defaultSchema = "nervaudit";
+    private boolean enabled = true;
+  }
 }

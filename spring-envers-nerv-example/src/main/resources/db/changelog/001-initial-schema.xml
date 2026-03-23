@@ -6,19 +6,19 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
   <changeSet id="001-seq-revinfo" author="edward">
-    <createSequence sequenceName="revinfo_seq" schemaName="${schemaName}" startValue="1" incrementBy="1"/>
+    <createSequence sequenceName="revinfo_seq" schemaName="${schemaName}" startValue="1" incrementBy="50"/>
   </changeSet>
 
   <changeSet id="002-seq-user" author="edward">
-    <createSequence sequenceName="user_seq" schemaName="${schemaName}" startValue="1" incrementBy="1"/>
+    <createSequence sequenceName="user_seq" schemaName="${schemaName}" startValue="1" incrementBy="50"/>
   </changeSet>
 
   <changeSet id="003-revinfo" author="edward">
     <createTable tableName="revinfo" schemaName="${schemaName}">
-      <column name="id" type="BIGINT">
+      <column name="rev" type="BIGINT">
         <constraints primaryKey="true" nullable="false"/>
       </column>
-      <column name="timestamp" type="BIGINT"/>
+      <column name="revtstmp" type="BIGINT"/>
     </createTable>
   </changeSet>
 

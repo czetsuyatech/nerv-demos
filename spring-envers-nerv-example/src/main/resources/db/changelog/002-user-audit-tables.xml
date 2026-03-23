@@ -28,8 +28,8 @@
   <changeSet id="007-user-account-aud" author="edward">
     <createTable tableName="user_account_aud" schemaName="${schemaName}">
       <column name="id" type="BIGINT"/>
-      <column name="revision_no" type="BIGINT"/>
-      <column name="revision_type" type="SMALLINT"/>
+      <column name="rev" type="BIGINT"/>
+      <column name="revtype" type="SMALLINT"/>
       <column name="updated_by" type="VARCHAR(255)"/>
       <column name="updated" type="TIMESTAMP"/>
       <column name="field_name" type="VARCHAR(255)"/>

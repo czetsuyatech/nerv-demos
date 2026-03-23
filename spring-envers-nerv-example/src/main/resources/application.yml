@@ -1,36 +1,38 @@
 logging:
   level:
     root: info
-    liquibase: DEBUG
-    org.springframework.boot.autoconfigure.liquibase: DEBUG
+    liquibase: trace
+    org.springframework.boot.autoconfigure.liquibase: trace
 
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/nerv-example?currentSchema=envers}
+    url: jdbc:postgresql://localhost:5432/nerv-examples?currentSchema=nervaudit
     driver-class-name: org.postgresql.Driver
     username: nerv
     password: nerv
     hikari:
       connection-test-query: SELECT 1
-      jdbc-url: ${spring.datasource.url}
       maximum-pool-size: 17
       minimum-idle: 10
-      pool-name: ct-pool-example
-      username: ${spring.datasource.username}
-      password: ${spring.datasource.password}
+      pool-name: ct-pool
   jpa:
-    generate-ddl: true
+#    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
-      hibernate.default_schema: envers
+      hibernate:
+        default_schema: nervaudit
+        envers:
+          autoRegisterListeners: false
+    generate-ddl: true
+
   liquibase:
     enabled: true
-    default-schema: envers
     change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: nervaudit
+    liquibase-schema: nervaudit
     fail-on-error: true
-    drop-first: true
 
 nerv:
   audit:
