@@ -1,5 +1,6 @@
 package com.czetsuyatech.envers.config;
 
+import java.util.Map;
 import lombok.Data;
 
 /**
@@ -12,4 +13,6 @@ public class NervLiquibaseProperties {
   private String contexts = "default,dev,prod";
   private String defaultSchema = "nervaudit";
   private boolean enabled = true;
+  private boolean dropFirst = false;
+  private Map<String, String> parameters;
 }

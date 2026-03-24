@@ -1,8 +1,9 @@
 logging:
   level:
     root: info
-    liquibase: trace
-    org.springframework.boot.autoconfigure.liquibase: trace
+    com.czetsuyatech: debug
+    liquibase: debug
+    org.springframework.boot.autoconfigure.liquibase: debug
 
 spring:
   datasource:
@@ -26,7 +27,7 @@ spring:
         envers:
           autoRegisterListeners: false
     generate-ddl: false
-    show-sql: true
+    show-sql: false
 
   liquibase:
     enabled: true

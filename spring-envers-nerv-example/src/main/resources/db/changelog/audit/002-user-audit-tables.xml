@@ -40,7 +40,7 @@
     <addPrimaryKey
         tableName="user_account_aud"
         schemaName="${schemaName}"
-        columnNames="id, rev"
+        columnNames="id, rev, field_name"
         constraintName="pk_user_account_aud"/>
   </changeSet>
 
