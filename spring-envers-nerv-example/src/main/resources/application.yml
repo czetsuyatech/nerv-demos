@@ -2,8 +2,6 @@ logging:
   level:
     root: info
     com.czetsuyatech: debug
-    liquibase: debug
-    org.springframework.boot.autoconfigure.liquibase: debug
 
 spring:
   datasource:
@@ -31,11 +29,11 @@ spring:
 
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    change-log: classpath:db/changelog/db.${nerv.audit.audit-strategy-type}-changelog-master.xml
     default-schema: nervaudit
     fail-on-error: true
 
 nerv:
   audit:
     audit-insert: true
-    audit-strategy-type: vertical
+    audit-strategy-type: horizontal

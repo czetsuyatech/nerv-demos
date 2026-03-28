@@ -9,13 +9,9 @@
   <!-- Define schema variable -->
   <property name="schemaName" value="nervaudit"/>
 
-  <!-- Create schema -->
-  <changeSet id="0" author="ed">
-    <sql>CREATE SCHEMA IF NOT EXISTS ${schemaName};</sql>
-  </changeSet>
-
   <!-- Include other changelogs -->
-  <include file="core/001-initial-schema.xml" relativeToChangelogFile="true"/>
-  <include file="audit/002-user-audit-tables.xml" relativeToChangelogFile="true"/>
+  <include file="core/001-create-schema.xml" relativeToChangelogFile="true"/>
+  <include file="core/002-initial-schema.xml" relativeToChangelogFile="true"/>
+  <include file="audit/horizontal/002-user-audit-tables.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
