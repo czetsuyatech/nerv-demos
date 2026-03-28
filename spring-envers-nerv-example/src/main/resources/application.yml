@@ -36,4 +36,4 @@ spring:
 nerv:
   audit:
     audit-insert: true
-    audit-strategy-type: horizontal
+    audit-strategy-type: vertical

@@ -4,8 +4,6 @@ import com.czetsuyatech.envers.persistence.entity.UserEntity;
 import com.czetsuyatech.envers.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +41,13 @@ public class UserController {
     return ResponseEntity.of(userService.getById(userId));
   }
 
-  @GetMapping("/{userId}/revisions")
-  public Object getRevisions(@PathVariable Long userId) {
-    return userService.getRevisions(userId);
+  @GetMapping("/{userId}/horizontal-revisions")
+  public Object getHorizontalRevisions(@PathVariable Long userId) {
+    return userService.getHorizontalRevisions(userId);
+  }
+
+  @GetMapping("/{userId}/vertical-revisions")
+  public Object getVerticalRevisions(@PathVariable Long userId) {
+    return userService.getVerticalRevisions(userId);
   }
 }

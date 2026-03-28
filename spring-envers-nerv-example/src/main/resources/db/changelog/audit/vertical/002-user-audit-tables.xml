@@ -34,7 +34,6 @@
       <column name="field_name" type="VARCHAR(255)"/>
       <column name="old_value" type="VARCHAR(255)"/>
       <column name="new_value" type="VARCHAR(255)"/>
-
     </createTable>
 
     <addPrimaryKey

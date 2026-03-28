@@ -13,5 +13,7 @@ public interface UserService {
 
   Optional<UserEntity> getById(Long userId);
 
-  Object getRevisions(Long userId);
+  Object getHorizontalRevisions(Long userId);
+
+  Object getVerticalRevisions(Long userId);
 }

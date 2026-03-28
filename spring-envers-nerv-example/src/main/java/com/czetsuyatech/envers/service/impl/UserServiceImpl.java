@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.DefaultRevisionEntity;
+import org.hibernate.envers.RevisionType;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,12 +51,49 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Object getRevisions(Long userId) {
+  public Object getHorizontalRevisions(Long userId) {
 
     AuditReader auditReader = AuditReaderFactory.get(entityManager);
-    var revisions = auditReader.getRevisions(UserEntity.class, userId);
 
-    return auditReader.find(UserEntity.class, userId, revisions.getLast());
+    List<Object[]> revisions = auditReader.createQuery()
+        .forRevisionsOfEntity(UserEntity.class, false, true) // false for Object[], true to include deletions
+        .getResultList();
+
+    return revisions.stream()
+        .map(revision -> {
+          UserEntity entity = (UserEntity) revision[0];
+          DefaultRevisionEntity revisionEntity = (DefaultRevisionEntity) revision[1];
+          RevisionType revisionType = (RevisionType) revision[2];
+
+          return new DefaultRevision(entity, revisionEntity, revisionType);
+        }).toList();
+  }
+
+  @Override
+  public Object getVerticalRevisions(Long userId) {
+
+    AuditReader auditReader = AuditReaderFactory.get(entityManager);
+
+    List<Object[]> revisions = auditReader.createQuery()
+        .forRevisionsOfEntity(UserEntity.class, false, true) // false for Object[], true to include deletions
+        .getResultList();
+
+    return revisions.stream()
+        .map(revision -> {
+          UserEntity entity = (UserEntity) revision[0];
+          DefaultRevisionEntity revisionEntity = (DefaultRevisionEntity) revision[1];
+          RevisionType revisionType = (RevisionType) revision[2];
+
+          return new DefaultRevision(entity, revisionEntity, revisionType);
+        }).toList();
+  }
+
+  private record DefaultRevision(
+      Object entity,
+      DefaultRevisionEntity revision,
+      RevisionType revisionType
+  ) {
+
   }
 
   private static UserEntity getUser() {
