@@ -1,6 +1,5 @@
 package com.czetsuyatech.envers.config;
 
-import com.czetsuyatech.audit.config.EnableNervAudit;
 import com.czetsuyatech.envers.persistence.entity.EntityConfig;
 import javax.sql.DataSource;
 import liquibase.integration.spring.SpringLiquibase;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @Configuration
-@EnableNervAudit
 public class InfrastructureConfig {
 
   /**
