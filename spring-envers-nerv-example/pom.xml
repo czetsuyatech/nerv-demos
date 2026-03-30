@@ -23,7 +23,7 @@
     <!-- Your audit library -->
     <dependency>
       <groupId>com.czetsuyatech</groupId>
-      <artifactId>nerv-audit</artifactId>
+      <artifactId>nerv-audit-spring-boot-starter</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
