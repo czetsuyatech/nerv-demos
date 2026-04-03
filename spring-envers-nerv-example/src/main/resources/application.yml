@@ -35,6 +35,10 @@ spring:
 
 nerv:
   audit:
+    license:
+      key:
+      public-key: czetsuyatech_nerv_public.pem
+      enabled: true
     web:
       enabled: true
     audit-insert: true
