@@ -12,8 +12,4 @@ public interface UserService {
   void delete(Long userId);
 
   Optional<UserEntity> getById(Long userId);
-
-  Object getHorizontalRevisions(Long userId);
-
-  Object getVerticalRevisions(Long userId);
 }

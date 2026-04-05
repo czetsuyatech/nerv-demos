@@ -1,20 +1,21 @@
-# spring-envers-nerv-example
+# NERV | Audit | Examples
 
 This project demonstrates how to use `nerv-audit-spring-boot-starter` with Spring Boot + JPA + Envers + Liquibase.
 
 It includes examples for:
 - Horizontal auditing
 - Vertical auditing
-- Lite auditing flow (JPA operations only)
+- Lite auditing flow (create JPA operation only)
 - Pro auditing flow (create, update, delete + endpoints to fetch revisions)
 
 ## 1. What this example contains
 
 - Audit-enabled JPA entity: `UserEntity` (`@Audited`)
-- CRUD service operations: create/update/delete/get
+- CRUD service operations: 
+  - create/update/delete/get
 - Revision endpoints:
-  - `GET /users/{userId}/horizontal-revisions`
-  - `GET /users/{userId}/vertical-revisions`
+  - `GET /nerv-audit/horizontal/UserEntity?offset=2&limit=10`
+  - `GET /nerv-audit/vertical/com.czetsuyatech.envers.persistence.entity.UserEntity?offset=2&limit=2`
 - Liquibase changelogs for both audit strategies:
   - `db.horizontal-changelog-master.xml`
   - `db.vertical-changelog-master.xml`
@@ -141,11 +142,11 @@ This repository demonstrates a pro-style flow where the app exposes operational 
 
 ### Revision endpoints
 
-- `GET /users/{userId}/horizontal-revisions`
-- `GET /users/{userId}/vertical-revisions`
+- `GET /nerv-audit/com.czetsuyatech.envers.persistence.entity.UserEntity?offset=2&limit=2`
 
 Controller location:
 - `src/main/java/com/czetsuyatech/envers/web/controller/UserController.java`
+- `src/main/java/com.czetsuyatech.audit.web.controller/AuditController.java`
 
 Service revision query implementation uses Envers `AuditReader`:
 
@@ -192,8 +193,8 @@ curl http://localhost:8080/users/1
 ### 9.5 Read revisions
 
 ```bash
-curl http://localhost:8080/users/1/horizontal-revisions
-curl http://localhost:8080/users/1/vertical-revisions
+curl http://localhost:8080/nerv-audit/horizontal/UserEntity?offset=2&limit=10
+curl http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.envers.persistence.entity.UserEntity?offset=2&limit=2
 ```
 
 ## 10. Expected behavior

@@ -40,14 +40,4 @@ public class UserController {
   public ResponseEntity<UserEntity> getUser(@PathVariable Long userId) {
     return ResponseEntity.of(userService.getById(userId));
   }
-
-  @GetMapping("/{userId}/horizontal-revisions")
-  public Object getHorizontalRevisions(@PathVariable Long userId) {
-    return userService.getHorizontalRevisions(userId);
-  }
-
-  @GetMapping("/{userId}/vertical-revisions")
-  public Object getVerticalRevisions(@PathVariable Long userId) {
-    return userService.getVerticalRevisions(userId);
-  }
 }
