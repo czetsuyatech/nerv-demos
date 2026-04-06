@@ -5,7 +5,7 @@ This project demonstrates how to use `nerv-audit-spring-boot-starter` with Sprin
 It includes examples for:
 - Horizontal auditing
 - Vertical auditing
-- Lite auditing flow (create JPA operation only)
+- Lite auditing flow (create audit + + endpoints to fetch revisions)
 - Pro auditing flow (create, update, delete + endpoints to fetch revisions)
 
 ## 1. What this example contains
@@ -85,9 +85,9 @@ Liquibase file used:
 Liquibase file used:
 - `src/main/resources/db/changelog/audit/vertical/002-user-audit-tables.xml`
 
-## 6. Lite version example (JPA operations only)
+## 6. Lite version example (Create + revision endpoints)
 
-Use this when you only need auditing generated from JPA persistence operations, without exposing revision APIs.
+Use this when you only need auditing generated from create JPA operations, with revision APIs.
 
 Minimum requirements:
 1. Add starter dependency.
@@ -199,9 +199,9 @@ curl http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.envers.persisten
 
 ## 10. Expected behavior
 
-- Create produces revision type `ADD`.
-- Update produces revision type `MOD`.
-- Delete produces revision type `DEL`.
+- Create produces revision type `ADD=0`.
+- Update produces revision type `MOD=1`.
+- Delete produces revision type `DEL=2`.
 - Returned revision payload contains entity snapshot and revision metadata (revision number, timestamp, type).
 
 ## 11. Notes for strategy selection
