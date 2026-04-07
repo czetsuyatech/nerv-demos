@@ -10,7 +10,7 @@
     <relativePath/>
   </parent>
 
-  <groupId>com.czetsuyatech</groupId>
+  <groupId>com.czetsuyatech.nerv</groupId>
   <artifactId>spring-envers-nerv-example</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
@@ -22,12 +22,12 @@
   <dependencies>
     <!-- Your audit library -->
     <dependency>
-      <groupId>com.czetsuyatech</groupId>
+      <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-audit-spring-boot-starter</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.czetsuyatech</groupId>
+      <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-audit-lite</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
