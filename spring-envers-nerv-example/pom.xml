@@ -24,12 +24,12 @@
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-audit-spring-boot-starter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-audit-lite</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.0</version>
     </dependency>
 
     <!-- Spring Boot essentials -->
