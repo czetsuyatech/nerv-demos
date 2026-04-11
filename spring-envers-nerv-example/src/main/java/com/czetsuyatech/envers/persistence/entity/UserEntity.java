@@ -66,5 +66,6 @@ public class UserEntity implements Serializable {
       joinColumns = @JoinColumn(name = "user_id")
   )
   @Column(name = "hobby")
+  @Audited
   private List<String> hobbies;
 }

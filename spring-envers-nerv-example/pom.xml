@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
-      <artifactId>nerv-audit-lite</artifactId>
+      <artifactId>nerv-audit-core</artifactId>
       <version>1.0.0</version>
     </dependency>
 

@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
         .map(user -> {
           user.setFirstName("czetsuya");
           user.setLastName("tech");
+          user.getHobbies().add("Anime");
           return user;
         })
         .map(user -> userRepository.save(user));
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
         .lastName("Legaspi")
         .birthDate(LocalDateTime.now())
         .username("czetsuya")
-        .hobbies(List.of("chess"))
+        .hobbies(List.of("Chess"))
         .build();
   }
 }
