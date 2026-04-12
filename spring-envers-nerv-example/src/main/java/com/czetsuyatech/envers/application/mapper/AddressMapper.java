@@ -1,0 +1,34 @@
+package com.czetsuyatech.envers.application.mapper;
+
+import com.czetsuyatech.envers.application.dto.AddressDTO;
+import com.czetsuyatech.envers.persistence.entity.AddressEntity;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants.ComponentModel;
+import org.mapstruct.ReportingPolicy;
+
+@Mapper(
+    componentModel = ComponentModel.SPRING,
+    injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+    unmappedSourcePolicy = ReportingPolicy.IGNORE
+)
+public interface AddressMapper {
+
+
+  @Mapping(source = "user.id", target = "userId")
+  AddressDTO toAddressDTO(AddressEntity addressEntity);
+
+  AddressEntity toEntity(AddressDTO addressDTO);
+
+  default AddressEntity fromId(Long id) {
+
+    if (id == null) {
+      return null;
+    }
+
+    AddressEntity entity = new AddressEntity();
+    entity.setId(id);
+    return entity;
+  }
+}

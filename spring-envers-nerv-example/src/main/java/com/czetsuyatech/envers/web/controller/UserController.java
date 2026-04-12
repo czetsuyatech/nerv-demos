@@ -1,6 +1,6 @@
 package com.czetsuyatech.envers.web.controller;
 
-import com.czetsuyatech.envers.persistence.entity.UserEntity;
+import com.czetsuyatech.envers.application.dto.UserDTO;
 import com.czetsuyatech.envers.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,13 +23,14 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping
-  public UserEntity createUser() {
-    return userService.create();
+  public UserDTO createUser(@RequestBody UserDTO userDTO) {
+    return userService.create(userDTO);
   }
 
   @PutMapping("/{userId}")
-  public void updateUser(@PathVariable Long userId) {
-    userService.update(userId);
+  public void updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+
+    userService.update(userId, userDTO);
   }
 
   @DeleteMapping("/{userId}")
@@ -37,7 +39,7 @@ public class UserController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<UserEntity> getUser(@PathVariable Long userId) {
+  public ResponseEntity<UserDTO> getUser(@PathVariable Long userId) {
     return ResponseEntity.of(userService.getById(userId));
   }
 }

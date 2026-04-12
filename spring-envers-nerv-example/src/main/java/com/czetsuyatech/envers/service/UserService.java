@@ -1,15 +1,15 @@
 package com.czetsuyatech.envers.service;
 
-import com.czetsuyatech.envers.persistence.entity.UserEntity;
+import com.czetsuyatech.envers.application.dto.UserDTO;
 import java.util.Optional;
 
 public interface UserService {
 
-  UserEntity create();
+  UserDTO create(UserDTO userDTO);
 
-  void update(Long userId);
+  void update(Long userId, UserDTO userDTO);
 
   void delete(Long userId);
 
-  Optional<UserEntity> getById(Long userId);
+  Optional<UserDTO> getById(Long userId);
 }

@@ -79,4 +79,17 @@
     </createTable>
   </changeSet>
 
+  <changeSet id="012-create-user-address-audit-table" author="czetsuya">
+    <createTable tableName="user_address_aud">
+      <column name="id" type="bigint"></column>
+      <column name="rev" type="bigint"></column>
+      <column name="revtype" type="bigint"></column>
+      <column name="updated_by" type="varchar(255)"></column>
+      <column name="updated" type="timestamp"></column>
+      <column name="field_name" type="varchar(255)"></column>
+      <column name="old_value" type="varchar(255)"></column>
+      <column name="new_value" type="varchar(255)"></column>
+    </createTable>
+  </changeSet>
+
 </databaseChangeLog>

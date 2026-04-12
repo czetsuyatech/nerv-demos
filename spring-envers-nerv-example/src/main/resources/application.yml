@@ -26,7 +26,6 @@ spring:
           autoRegisterListeners: false
     generate-ddl: false
     show-sql: false
-
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.${nerv.audit.audit-strategy-type}-changelog-master.xml
