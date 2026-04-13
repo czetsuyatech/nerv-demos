@@ -81,8 +81,12 @@
 
   <changeSet id="012-create-user-address-audit-table" author="czetsuya">
     <createTable tableName="user_address_aud">
-      <column name="id" type="bigint"></column>
-      <column name="rev" type="bigint"></column>
+      <column name="id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rev" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
       <column name="revtype" type="bigint"></column>
       <column name="updated_by" type="varchar(255)"></column>
       <column name="updated" type="timestamp"></column>

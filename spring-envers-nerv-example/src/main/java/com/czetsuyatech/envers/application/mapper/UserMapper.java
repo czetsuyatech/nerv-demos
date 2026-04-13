@@ -5,6 +5,7 @@ import com.czetsuyatech.envers.persistence.entity.UserEntity;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
@@ -21,6 +22,7 @@ public interface UserMapper {
 
   UserEntity toEntity(UserDTO userDTO);
 
+  @Mapping(target = "id", ignore = true)
   UserEntity toEntity(UserDTO userDTO, @MappingTarget UserEntity entity);
 
   @AfterMapping

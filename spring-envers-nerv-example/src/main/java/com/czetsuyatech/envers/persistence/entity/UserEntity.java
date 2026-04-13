@@ -71,6 +71,6 @@ public class UserEntity implements Serializable {
   @Audited
   private List<String> hobbies;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
   private List<AddressEntity> addresses;
 }

@@ -1,5 +1,6 @@
 package com.czetsuyatech.envers.web.controller;
 
+import com.czetsuyatech.envers.application.dto.AddressDTO;
 import com.czetsuyatech.envers.application.dto.UserDTO;
 import com.czetsuyatech.envers.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,12 @@ public class UserController {
   public void updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
 
     userService.update(userId, userDTO);
+  }
+
+  @PutMapping("/{userId}/addresses/{addressId}")
+  public void updateAddress(@PathVariable Long userId, @PathVariable Long addressId, @RequestBody AddressDTO addressDTO) {
+
+    userService.updateAddress(addressId, addressDTO);
   }
 
   @DeleteMapping("/{userId}")

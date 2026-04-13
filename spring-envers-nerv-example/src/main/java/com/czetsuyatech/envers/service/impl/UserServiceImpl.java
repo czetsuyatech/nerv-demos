@@ -1,5 +1,6 @@
 package com.czetsuyatech.envers.service.impl;
 
+import com.czetsuyatech.envers.application.dto.AddressDTO;
 import com.czetsuyatech.envers.application.dto.UserDTO;
 import com.czetsuyatech.envers.application.mapper.AddressMapper;
 import com.czetsuyatech.envers.application.mapper.UserMapper;
@@ -7,9 +8,7 @@ import com.czetsuyatech.envers.persistence.repository.AddressRepository;
 import com.czetsuyatech.envers.persistence.repository.UserRepository;
 import com.czetsuyatech.envers.service.UserService;
 import com.github.javafaker.Faker;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,17 +42,6 @@ public class UserServiceImpl implements UserService {
   @Override
   public void update(Long userId, UserDTO userDTO) {
 
-    Faker faker = new Faker();
-
-    Optional.ofNullable(userId)
-        .map(addressRepository::findByUserId)
-        .filter(addresses -> !addresses.isEmpty())
-        .orElseThrow(() -> new IllegalArgumentException("User not found"))
-        .forEach(address -> {
-          address.setStreet(faker.address().streetName());
-          addressRepository.save(address);
-        });
-
     Optional.ofNullable(userId)
         .flatMap(userRepository::findById)
         .map(user -> userMapper.toEntity(userDTO, user))
@@ -71,5 +59,21 @@ public class UserServiceImpl implements UserService {
   public Optional<UserDTO> getById(Long userId) {
     return userRepository.findById(userId)
         .map(userMapper::toDto);
+  }
+
+  @Transactional
+  @Override
+  public void updateAddress(Long addressId, AddressDTO addressDTO) {
+
+    Faker faker = new Faker();
+
+    Optional.ofNullable(addressId)
+        .flatMap(addressRepository::findById)
+        .map(e -> {
+          addressMapper.toEntity(addressDTO, e);
+          return e;
+        })
+        .map(addressRepository::save)
+        .orElseThrow(() -> new IllegalArgumentException("Address not found"));
   }
 }
