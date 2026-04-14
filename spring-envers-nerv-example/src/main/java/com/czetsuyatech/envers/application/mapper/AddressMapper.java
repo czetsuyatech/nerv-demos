@@ -6,6 +6,7 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -20,6 +21,9 @@ public interface AddressMapper {
   AddressDTO toAddressDTO(AddressEntity addressEntity);
 
   AddressEntity toEntity(AddressDTO addressDTO);
+
+  @Mapping(target = "id", ignore = true)
+  void toEntity(AddressDTO addressDTO, @MappingTarget AddressEntity addressEntity);
 
   default AddressEntity fromId(Long id) {
 
