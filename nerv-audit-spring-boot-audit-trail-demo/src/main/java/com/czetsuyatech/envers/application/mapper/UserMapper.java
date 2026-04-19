@@ -14,7 +14,8 @@ import org.mapstruct.ReportingPolicy;
     componentModel = ComponentModel.SPRING,
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
     unmappedSourcePolicy = ReportingPolicy.IGNORE,
-    uses = {AddressMapper.class}
+    uses = {AddressMapper.class},
+    config = GlobalMapperConfig.class
 )
 public interface UserMapper {
 

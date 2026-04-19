@@ -12,7 +12,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(
     componentModel = ComponentModel.SPRING,
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-    unmappedSourcePolicy = ReportingPolicy.IGNORE
+    unmappedSourcePolicy = ReportingPolicy.IGNORE,
+    config = GlobalMapperConfig.class
 )
 public interface AddressMapper {
 
