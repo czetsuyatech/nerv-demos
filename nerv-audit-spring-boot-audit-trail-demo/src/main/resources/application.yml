@@ -1,0 +1,44 @@
+logging:
+  level:
+    root: info
+    com.czetsuyatech: debug
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/nerv-examples?currentSchema=nervaudit
+    driver-class-name: org.postgresql.Driver
+    username: nerv
+    password: nerv
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: 17
+      minimum-idle: 10
+      pool-name: ct-pool
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: nervaudit
+        envers:
+          autoRegisterListeners: false
+    generate-ddl: false
+    show-sql: false
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.${nerv.audit.audit-strategy-type}-changelog-master.xml
+    default-schema: nervaudit
+    fail-on-error: true
+
+nerv:
+  audit:
+    license:
+      key: eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJjemV0c3V5YXRlY2giLCJzdWIiOiJjemV0c3V5YXRlY2giLCJ0eXBlIjoicHJvIiwiZmVhdHVyZXMiOlsid2ViX3NlYXJjaCIsImF1ZGl0X2NyZWF0ZSIsImF1ZGl0X3VwZGF0ZSIsImF1ZGl0X2RlbGV0ZSIsImF1ZGl0X2xpc3RfY3J1ZCJdLCJleHBpcnkiOjE3NzY0MzMxNTIsImlzc3VlZEJ5IjoiY3pldHN1eWF0ZWNoIiwiZW1haWwiOiJjemV0c3V5YUBnbWFpbC5jb20iLCJpYXQiOjE3NzYyNjAzNTIsImV4cCI6MTc3NjQzMzE1Mn0.Missl3QWjYWxS6OAguFDK6XpSmaLslKURbwI9qGMhVb0dorP_B46jEIEDUtzFB7Ewz2eg_Lzn7vlCigfHZD_D_hswtFV7NtuKlm_Vyh5un_6WbDV4Sat_p85Jb09vhIycndey3YctRarBzMc2GuOW93UVhKa-bE5TlK1lX5CMkJYzdNgYwkf-wVFUDSQ6jQZ05u2Kp8SmfkrmT13YcNMZ03qlD9yDCLGIW1j1O8ijYGSNj_1YNk_MwoTT3io78XAspZrBRQVj-ToX2f8U-kmWPM5oYgF1ZgZi5w9fSXyqV5l3SfaJYh7sbJ7ghvDwzTIuyvOeRmQkeuGoRzYJoWPmA
+      public-key: czetsuyatech_nerv_public.pem
+      enabled: true
+    web:
+      enabled: true
+    audit-insert: true
+    audit-strategy-type: vertical
