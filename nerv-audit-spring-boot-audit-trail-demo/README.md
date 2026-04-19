@@ -1,4 +1,4 @@
-# NERV | Audit | Examples
+# NERV | Audit | Demos
 
 This project demonstrates how to use `nerv-audit-spring-boot-starter` with Spring Boot + JPA + Envers + Liquibase.
 
