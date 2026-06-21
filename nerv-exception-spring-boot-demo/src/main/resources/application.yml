@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+nerv:
+  exception:
+    enabled: true
+    web:
+      enabled: true
+    feign:
+      enabled: true
+    event:
+      enabled: true

@@ -235,6 +235,133 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Exception",
+      "item": [
+        {
+          "name": "Error | 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/payments/404",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "payments",
+                "404"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error | Timeout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/payments/timeout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "payments",
+                "timeout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error | 500",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/payments/error",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "payments",
+                "error"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feign | 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/feign/payments/not-found",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "feign",
+                "payments",
+                "not-found"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feign | Timeout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/feign/payments/timeout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "feign",
+                "payments",
+                "timeout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feign | Trace",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/feign/trace",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "feign",
+                "trace"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
