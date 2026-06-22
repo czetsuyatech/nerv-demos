@@ -1,5 +1,21 @@
+debug: true
+
 server:
   port: 8080
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+    consumer:
+      group-id: nerv-exception-demo
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.czetsuyatech.nerv.example.exception.kafka,com.czetsuyatech.nerv.exception.event"
 
 nerv:
   exception:
@@ -10,3 +26,7 @@ nerv:
       enabled: true
     event:
       enabled: true
+    kafka:
+      enabled: true
+      source: nerv-exception-demo
+      dlq-topic-suffix: .dlq

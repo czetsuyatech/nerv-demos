@@ -41,6 +41,11 @@
       <artifactId>nerv-exception-event</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.czetsuyatech.nerv</groupId>
+      <artifactId>nerv-exception-spring-kafka</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
 
     <!-- Spring Boot essentials -->
     <dependency>
@@ -58,6 +63,14 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-opentelemetry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
     </dependency>
 
     <!-- Dev tools and Lombok -->

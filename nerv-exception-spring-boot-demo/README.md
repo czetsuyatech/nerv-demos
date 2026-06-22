@@ -380,6 +380,377 @@ HTTP/1.1 504 Gateway Timeout
 
 This ensures consistent tracing and error handling across service boundaries.
 
+---
+
+## Event and Kafka Integration
+
+This demo showcases how `nerv-exception` integrates with Kafka to convert failed message processing into standardized error events.
+
+It demonstrates:
+
+* Publishing normal Kafka messages
+* Consuming Kafka messages
+* Mapping failed processing into `NervErrorEvent`
+* Publishing failed messages to a DLQ topic
+* Propagating error metadata through Kafka headers
+* Separating synchronous trace handling from asynchronous event trace handling
+
+---
+
+## Dependencies
+
+```xml
+<dependency>
+    <groupId>com.czetsuyatech</groupId>
+    <artifactId>nerv-exception-spring-boot-starter</artifactId>
+    <version>${nerv-exception.version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.kafka</groupId>
+    <artifactId>spring-kafka</artifactId>
+</dependency>
+```
+
+---
+
+## Kafka Configuration
+
+```yaml
+nerv:
+  exception:
+    kafka:
+      enabled: true
+      source: nerv-exception-demo
+      dlq-topic-suffix: .dlq
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+
+    consumer:
+      group-id: nerv-exception-demo
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.czetsuyatech.nerv.example.exception.kafka,com.czetsuyatech.nerv.exception.event"
+        spring.json.value.default.type: com.czetsuyatech.nerv.example.exception.kafka.PaymentMessage
+```
+
+For Spring Boot 4 / Spring Kafka 4, use `JacksonJsonSerializer` and `JacksonJsonDeserializer`.
+
+---
+
+## Local Kafka
+
+```yaml
+services:
+  kafka:
+    image: apache/kafka:4.0.1
+    container_name: nerv-exception-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+```
+
+Start Kafka:
+
+```bash
+docker compose up -d
+```
+
+---
+
+## Message Model
+
+```java
+public record PaymentMessage(
+    String paymentId,
+    String status
+) {
+}
+```
+
+---
+
+## Producer
+
+```java
+@Service
+@RequiredArgsConstructor
+public class PaymentKafkaProducer {
+
+    private final KafkaTemplate<String, PaymentMessage> kafkaTemplate;
+
+    public void publish(PaymentMessage message) {
+        kafkaTemplate.send("payments", message.paymentId(), message);
+    }
+}
+```
+
+---
+
+## Consumer
+
+```java
+@Component
+@RequiredArgsConstructor
+public class PaymentKafkaConsumer {
+
+    private final NervKafkaErrorHandler errorHandler;
+
+    @KafkaListener(
+        topics = "payments",
+        groupId = "nerv-exception-demo"
+    )
+    public void consume(
+        PaymentMessage message,
+        ConsumerRecord<String, PaymentMessage> record
+    ) {
+        try {
+            if ("FAIL".equals(message.status())) {
+                throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
+            }
+
+            System.out.println("Payment processed: " + message.paymentId());
+        } catch (Exception ex) {
+            errorHandler.handle(record, ex);
+        }
+    }
+}
+```
+
+---
+
+## DLQ Consumer
+
+```java
+@Component
+public class PaymentKafkaDlqConsumer {
+
+    @KafkaListener(
+        topics = "payments.dlq",
+        groupId = "nerv-exception-demo-dlq"
+    )
+    public void consumeDlq(
+        NervErrorEvent event,
+        ConsumerRecord<String, NervErrorEvent> record
+    ) {
+        System.out.println("DLQ event received:");
+        System.out.println(event);
+
+        record.headers().forEach(header ->
+            System.out.println(header.key() + "=" + new String(header.value()))
+        );
+    }
+}
+```
+
+---
+
+## Demo Controller
+
+```java
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/kafka/payments")
+public class PaymentKafkaDemoController {
+
+    private final PaymentKafkaProducer producer;
+
+    @PostMapping("/{id}")
+    public String publish(@PathVariable String id) {
+        producer.publish(new PaymentMessage(id, "PROCESSING"));
+        return "Payment message published: " + id;
+    }
+
+    @PostMapping("/{id}/fail")
+    public String publishFailing(@PathVariable String id) {
+        producer.publish(new PaymentMessage(id, "FAIL"));
+        return "Failing payment message published: " + id;
+    }
+}
+```
+
+---
+
+## Successful Message Flow
+
+Request:
+
+```bash
+curl -X POST http://localhost:8080/kafka/payments/123
+```
+
+Flow:
+
+```text
+POST /kafka/payments/123
+    ↓
+PaymentKafkaProducer
+    ↓
+payments topic
+    ↓
+PaymentKafkaConsumer
+    ↓
+Payment processed successfully
+```
+
+---
+
+## Failed Message Flow
+
+Request:
+
+```bash
+curl -X POST http://localhost:8080/kafka/payments/timeout/fail
+```
+
+Flow:
+
+```text
+POST /kafka/payments/timeout/fail
+    ↓
+PaymentKafkaProducer
+    ↓
+payments topic
+    ↓
+PaymentKafkaConsumer
+    ↓
+NervException(PAYMENT_TIMEOUT)
+    ↓
+NervKafkaErrorHandler
+    ↓
+NervErrorEvent
+    ↓
+payments.dlq
+```
+
+---
+
+## DLQ Topic Resolution
+
+The DLQ topic is resolved from the original topic plus the configured suffix.
+
+```text
+original topic: payments
+suffix:         .dlq
+DLQ topic:      payments.dlq
+```
+
+Configured by:
+
+```yaml
+nerv:
+  exception:
+    kafka:
+      dlq-topic-suffix: .dlq
+```
+
+---
+
+## Kafka Headers
+
+`NervKafkaHeaderMapper` maps error metadata into Kafka headers.
+
+Expected headers:
+
+| Header                 | Description             |
+| ---------------------- | ----------------------- |
+| `nerv-trace-id`        | Trace identifier        |
+| `nerv-span-id`         | Span identifier         |
+| `nerv-source`          | Source application      |
+| `nerv-parent-event-id` | Parent event identifier |
+| `nerv-error-code`      | Error code              |
+| `nerv-error-category`  | Error category          |
+
+Example output:
+
+```text
+nerv-trace-id=0af7651916cd43dd8448eb211c80319c
+nerv-span-id=b9c7c989f97918e1
+nerv-source=nerv-exception-demo
+nerv-parent-event-id=payment-timeout-failed
+nerv-error-code=PAYMENT_TIMEOUT
+nerv-error-category=INTEGRATION
+```
+
+---
+
+## Example `NervErrorEvent`
+
+```json
+{
+  "code": "PAYMENT_TIMEOUT",
+  "message": "Payment provider timed out",
+  "category": "INTEGRATION",
+  "retryable": true,
+  "source": "nerv-exception-demo",
+  "traceId": "0af7651916cd43dd8448eb211c80319c",
+  "spanId": "b9c7c989f97918e1",
+  "parentEventId": "payment-timeout-failed",
+  "timestamp": "2026-06-22T10:15:30Z"
+}
+```
+
+---
+
+## What Happens Internally
+
+1. A payment message is published to the `payments` topic.
+2. `PaymentKafkaConsumer` receives the message.
+3. If the message status is `FAIL`, the consumer throws a `NervException`.
+4. The exception is passed to `NervKafkaErrorHandler`.
+5. `NervKafkaErrorHandler` maps the exception into a `NervErrorEvent`.
+6. `NervKafkaDlqPublisher` publishes the event to `payments.dlq`.
+7. `NervKafkaHeaderMapper` writes error metadata into Kafka headers using `ProducerRecord`.
+8. `PaymentKafkaDlqConsumer` receives the DLQ event and prints the event plus headers.
+
+---
+
+## Why `ProducerRecord` Is Used
+
+Kafka headers must be attached to a `ProducerRecord`.
+
+`KafkaTemplate.send()` does not expose a direct overload for sending arbitrary headers with only topic, key, and value.
+
+So `NervKafkaDlqPublisher` uses:
+
+```java
+ProducerRecord<String, NervErrorEvent> record =
+    new ProducerRecord<>(dlqTopic, key, event);
+
+Headers headers = headerMapper.from(event);
+
+headers.forEach(record.headers()::add);
+
+return kafkaTemplate.send(record)
+    .thenApply(result -> null);
+```
+
+This ensures the DLQ message contains both:
+
+* structured `NervErrorEvent` payload
+* Kafka headers for routing, observability, and diagnostics
+
 
 ---
 

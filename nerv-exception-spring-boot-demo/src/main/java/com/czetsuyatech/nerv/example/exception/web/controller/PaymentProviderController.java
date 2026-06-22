@@ -1,6 +1,6 @@
 package com.czetsuyatech.nerv.example.exception.web.controller;
 
-import com.czetsuyatech.nerv.example.exception.web.error.PaymentErrorCode;
+import com.czetsuyatech.nerv.example.exception.error.PaymentErrorCode;
 import com.czetsuyatech.nerv.exception.core.NervException;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;

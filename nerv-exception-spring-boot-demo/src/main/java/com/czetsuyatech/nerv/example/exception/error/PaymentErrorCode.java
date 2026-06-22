@@ -1,4 +1,4 @@
-package com.czetsuyatech.nerv.example.exception.web.error;
+package com.czetsuyatech.nerv.example.exception.error;
 
 import com.czetsuyatech.nerv.exception.api.NervErrorCode;
 import org.springframework.http.HttpStatus;
