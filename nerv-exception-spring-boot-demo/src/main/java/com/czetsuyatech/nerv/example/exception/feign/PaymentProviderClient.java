@@ -18,4 +18,13 @@ public interface PaymentProviderClient {
 
   @GetMapping("/provider/trace")
   Map<String, String> trace();
+
+  @GetMapping("/provider/retry/payments/timeout")
+  String retryTimeout();
+
+  @GetMapping("/provider/retry/reset")
+  String resetRetry();
+
+  @GetMapping("/provider/retry/attempts")
+  int retryAttempts();
 }
