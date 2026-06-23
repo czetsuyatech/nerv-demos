@@ -1,277 +1,288 @@
-# NERV | Exception | Demos
+# NERV Exception Demo
 
-Demo application showcasing the capabilities of `nerv-exception` in a Spring Boot application.
-
-Current integrations:
-
-* Spring Web
-* OpenFeign (coming soon)
-* Kafka (coming soon)
+A comprehensive demonstration of the `nerv-exception` ecosystem showcasing standardized error handling, distributed tracing, Feign integration, retry-aware error propagation, Kafka event publishing, and dead-letter queue processing in a Spring Boot application.
 
 ---
 
-## Prerequisites
+# Overview
 
-* Java 17+
-* Maven 3.9+
-* Spring Boot 3.x
+Modern distributed systems often suffer from inconsistent error handling.
 
----
+Different services return different payloads, expose different HTTP status codes, use different retry strategies, and provide little observability when failures occur.
 
-## Running the Demo
+`nerv-exception` solves this by providing:
 
-Build and start the application:
-
-```bash
-mvn clean spring-boot:run
-```
-
-The application starts on:
-
-```text
-http://localhost:8080
-```
-
----
-
-## Features Demonstrated
-
-### Spring Web Integration
-
-The demo shows how `nerv-exception` provides:
-
-* Centralized exception handling
 * Standardized error responses
-* Custom application error codes
+* Centralized exception handling
+* Domain-specific error codes
+* Retry-aware error propagation
+* Distributed tracing support
+* Feign integration
+* Kafka error events
+* Dead-letter queue support
+* Cross-service error preservation
+
+The goal is to make failures predictable, observable, and actionable across an entire microservice ecosystem.
+
+---
+
+# Architecture
+
+```text
+                    ┌───────────────────┐
+                    │   HTTP Request    │
+                    └─────────┬─────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │ NervExceptionHandler    │
+                 └─────────┬───────────────┘
+                           │
+                           ▼
+                 ┌─────────────────────────┐
+                 │   NervErrorResponse     │
+                 └─────────┬───────────────┘
+                           │
+                           ▼
+                   ┌───────────────┐
+                   │ OpenFeign     │
+                   └───────┬───────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │ NervFeignErrorDecoder│
+                └───────┬──────────────┘
+                        │
+        ┌───────────────┴───────────────┐
+        │                               │
+        ▼                               ▼
+ RetryableException         NervDownstreamException
+        │                               │
+        ▼                               ▼
+ Resilience4j Retry           Standardized Error
+        │
+        ▼
+ Success / Failure
+
+---------------------------------------------------
+
+                 Kafka Consumer
+                        │
+                        ▼
+              NervKafkaErrorHandler
+                        │
+                        ▼
+                 NervErrorEvent
+                        │
+                        ▼
+                   DLQ Topic
+```
+
+---
+
+# Technology Stack
+
+* Java 21
+* Spring Boot 4.1
+* Spring Web
+* Spring Cloud OpenFeign
+* Micrometer Tracing
+* OpenTelemetry
+* Spring Kafka
+* Resilience4j
+* Maven
+
+---
+
+# Demo Modules
+
+This demo showcases the following integrations:
+
+| Feature            | Status |
+| ------------------ | ------ |
+| Spring Web         | ✅      |
+| Feign              | ✅      |
+| Retry              | ✅      |
+| Micrometer Tracing | ✅      |
+| OpenTelemetry      | ✅      |
+| Kafka              | ✅      |
+| DLQ Publishing     | ✅      |
+
+---
+
+# Core Concepts
+
+## NervErrorCode
+
+All application errors implement a common contract.
+
+```java
+public interface NervErrorCode {
+
+    String code();
+
+    String message();
+
+    int status();
+
+    boolean retryable();
+
+    String category();
+}
+```
+
+Example:
+
+```java
+public enum PaymentErrorCode implements NervErrorCode {
+
+    PAYMENT_NOT_FOUND(
+        "PAYMENT_NOT_FOUND",
+        "Payment was not found",
+        404,
+        false,
+        "BUSINESS"
+    ),
+
+    PAYMENT_TIMEOUT(
+        "PAYMENT_TIMEOUT",
+        "Payment provider timed out",
+        504,
+        true,
+        "INTEGRATION"
+    );
+}
+```
+
+---
+
+## Retryability
+
+Retry behavior is part of the error contract.
+
+```java
+PAYMENT_TIMEOUT.retryable() == true
+```
+
+This allows downstream services to communicate whether an operation is safe to retry.
+
+---
+
+# Spring Web Integration
+
+The Web module provides:
+
+* Global exception handling
 * Automatic HTTP status mapping
+* Standardized response payloads
+* Trace information
 * Retryability metadata
-* Error categorization
 
-No additional configuration or annotations are required.
+No annotations are required.
 
----
-
-## Demo Error Codes
-
-The application defines the following error codes:
-
-| Code                 | HTTP Status | Retryable | Category      |
-|----------------------|------------:|-----------|---------------|
-| `PAYMENT_NOT_FOUND`  |         404 | No        | `BUSINESS`    |
-| `PAYMENT_TIMEOUT`    |         504 | Yes       | `INTEGRATION` |
-| `UNEXPECTED_FAILURE` |         500 | No        | `SYSTEM`      |
-
----
-
-## Endpoints
-
-### Successful Request
-
-```http
-GET /payments/123
-```
-
-Response:
-
-```text
-Payment found: 123
-```
-
----
-
-### Payment Not Found
-
-```http
-GET /payments/404
-```
-
-Response:
-
-```http
-HTTP/1.1 404 Not Found
-```
-
-```json
-{
-  "code": "PAYMENT_NOT_FOUND",
-  "message": "Payment was not found",
-  "category": "BUSINESS",
-  "retryable": false,
-  "traceId": "7fa3bc52f4b14c5f"
-}
-```
-
----
-
-### Payment Timeout
-
-```http
-GET /payments/timeout
-```
-
-Response:
-
-```http
-HTTP/1.1 504 Gateway Timeout
-```
-
-```json
-{
-  "code": "PAYMENT_TIMEOUT",
-  "message": "Payment provider timed out",
-  "category": "INTEGRATION",
-  "retryable": true,
-  "traceId": "7fa3bc52f4b14c5f"
-}
-```
-
----
-
-### Unexpected Error
-
-```http
-GET /payments/error
-```
-
-Response:
-
-```http
-HTTP/1.1 500 Internal Server Error
-```
-
-```json
-{
-  "code": "INTERNAL_SERVER_ERROR",
-  "message": "An unexpected error occurred",
-  "category": "SYSTEM",
-  "retryable": false,
-  "traceId": "7fa3bc52f4b14c5f"
-}
-```
-
----
-
-## Project Structure
-
-```text
-src/main/java/com/czetsuyatech/nerv/examples/exception
-├── NervExceptionDemoApplication.java
-├── controller
-│   └── PaymentController.java
-└── error
-    └── DemoErrorCode.java
-```
-
----
-
-## Dependency
-
-The demo uses:
-
-```xml
-
-<dependency>
-  <groupId>com.czetsuyatech</groupId>
-  <artifactId>nerv-exception-spring-boot-starter</artifactId>
-  <version>${nerv-exception.version}</version>
-</dependency>
-```
-
----
-
-## Feign Integration
-
-This demo showcases how `nerv-exception` integrates with OpenFeign to provide:
-
-* Automatic trace propagation
-* Real OpenTelemetry integration
-* Standardized remote error handling
-* Automatic conversion of remote errors into `NervException`
-
-No additional Feign configuration is required.
-
-### Dependencies
+Simply add:
 
 ```xml
 <dependency>
     <groupId>com.czetsuyatech</groupId>
     <artifactId>nerv-exception-spring-boot-starter</artifactId>
-    <version>${nerv-exception.version}</version>
 </dependency>
+```
 
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-openfeign</artifactId>
-</dependency>
+---
 
+## Standard Error Response
+
+Example:
+
+```json
+{
+  "code": "PAYMENT_TIMEOUT",
+  "message": "Payment provider timed out",
+  "status": 504,
+  "retryable": true,
+  "category": "INTEGRATION",
+  "traceId": "0af7651916cd43dd8448eb211c80319c",
+  "spanId": "b9c7c989f97918e1",
+  "path": "/payments/timeout",
+  "timestamp": "2026-06-23T00:00:00Z"
+}
+```
+
+---
+
+# Distributed Tracing
+
+`nerv-exception` does not implement its own tracing system.
+
+Instead it integrates with:
+
+* Micrometer Tracing
+* OpenTelemetry
+
+Trace information is obtained from the active span.
+
+```java
+public interface NervTraceContextResolver {
+
+    NervTraceContext current();
+}
+```
+
+Default implementation:
+
+```java
+MicrometerNervTraceContextResolver
+```
+
+---
+
+## OpenTelemetry Configuration
+
+```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-opentelemetry</artifactId>
 </dependency>
 ```
 
-### Configuration
-
-Enable Feign and `nerv-exception` integration:
-
 ```yaml
-spring:
-  application:
-    name: nerv-exception-demo
-
-nerv:
-  exception:
-    web:
-      enabled: true
-    feign:
-      enabled: true
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
 ```
 
-Enable Feign clients:
+---
 
-```java
-@SpringBootApplication
-@EnableFeignClients
-public class NervExceptionDemoApplication {
+## Trace Propagation
 
-    public static void main(String[] args) {
-        SpringApplication.run(NervExceptionDemoApplication.class, args);
-    }
-}
+Propagation is handled automatically by OpenTelemetry.
+
+Headers:
+
+```text
+traceparent
+tracestate
 ```
 
-### Trace Context Integration
+No custom propagation configuration is required.
 
-The demo provides a custom `NervTraceContextResolver` backed by Micrometer Tracing.
+---
 
-```java
-@Configuration
-@RequiredArgsConstructor
-public class DemoTraceConfiguration {
+# Feign Integration
 
-    private final Tracer tracer;
+The Feign module provides:
 
-    @Bean
-    NervTraceContextResolver nervTraceContextResolver() {
-        return new NervTraceContextResolver() {
+* Standardized remote error decoding
+* Error code resolution
+* Retry-aware exception conversion
+* Downstream error preservation
 
-            @Override
-            public String traceId() {
-                Span span = tracer.currentSpan();
-                return span == null ? null : span.context().traceId();
-            }
+---
 
-            @Override
-            public String spanId() {
-                Span span = tracer.currentSpan();
-                return span == null ? null : span.context().spanId();
-            }
-        };
-    }
-}
-```
-
-### Feign Client
+## Feign Client
 
 ```java
 @FeignClient(
@@ -285,357 +296,189 @@ public interface PaymentProviderClient {
 
     @GetMapping("/provider/payments/timeout")
     String timeout();
-
-    @GetMapping("/provider/trace")
-    Map<String, String> trace();
 }
 ```
 
-### Automatic Trace Propagation
+---
 
-`NervFeignTracePropagationInterceptor` automatically propagates:
+## Error Decoding
 
-* `nerv-trace-id`
-* `nerv-span-id`
-
-to downstream services.
-
-### Verify Trace Propagation
-
-Invoke:
-
-```bash
-curl http://localhost:8080/feign/trace
-```
-
-Example response:
-
-```json
-{
-  "traceId": "0af7651916cd43dd8448eb211c80319c",
-  "spanId": "b9c7c989f97918e1"
-}
-```
-
-Expected behavior:
-
-* The `traceId` remains the same across the request chain.
-* The downstream service receives the propagated trace context.
-* The `spanId` represents the current operation.
-
-### Verify Error Decoding
-
-Invoke:
-
-```bash
-curl http://localhost:8080/feign/payments/not-found
-```
-
-Response:
-
-```http
-HTTP/1.1 404 Not Found
-```
-
-```json
-{
-  "code": "PAYMENT_NOT_FOUND",
-  "message": "Payment was not found",
-  "category": "BUSINESS",
-  "retryable": false,
-  "traceId": "0af7651916cd43dd8448eb211c80319c"
-}
-```
-
-Invoke:
-
-```bash
-curl http://localhost:8080/feign/payments/timeout
-```
-
-Response:
-
-```http
-HTTP/1.1 504 Gateway Timeout
-```
+When a downstream service returns:
 
 ```json
 {
   "code": "PAYMENT_TIMEOUT",
-  "message": "Payment provider timed out",
-  "category": "INTEGRATION",
-  "retryable": true,
-  "traceId": "0af7651916cd43dd8448eb211c80319c"
+  "retryable": true
 }
 ```
 
-### What Happens Internally
+`NervFeignErrorDecoder` converts it into:
 
-1. The incoming HTTP request creates a trace.
-2. `NervTraceContextResolver` retrieves the active trace context.
-3. `NervFeignTracePropagationInterceptor` adds trace headers to the outgoing Feign request.
-4. The downstream service receives the trace headers.
-5. If the downstream service returns an error response, `NervFeignErrorDecoder` converts it into a `NervException`.
-6. `NervExceptionHandler` converts the exception into a standardized HTTP response.
+```java
+RetryableException
+```
 
-This ensures consistent tracing and error handling across service boundaries.
+When the error is non-retryable:
 
----
+```java
+NervDownstreamException
+```
 
-## Event and Kafka Integration
-
-This demo showcases how `nerv-exception` integrates with Kafka to convert failed message processing into standardized error events.
-
-It demonstrates:
-
-* Publishing normal Kafka messages
-* Consuming Kafka messages
-* Mapping failed processing into `NervErrorEvent`
-* Publishing failed messages to a DLQ topic
-* Propagating error metadata through Kafka headers
-* Separating synchronous trace handling from asynchronous event trace handling
+is created instead.
 
 ---
 
-## Dependencies
+# Downstream Error Preservation
+
+Remote failures preserve the original context.
+
+Example:
+
+```json
+{
+  "code": "PAYMENT_TIMEOUT",
+  "traceId": "abc123",
+  "spanId": "xyz789"
+}
+```
+
+This information remains available after Feign decoding.
+
+Preserved metadata includes:
+
+* traceId
+* spanId
+* timestamp
+* path
+* details
+
+This makes cross-service troubleshooting significantly easier.
+
+---
+
+# Retry Integration
+
+Retry policies are intentionally externalized.
+
+The library communicates:
+
+```java
+retryable() == true
+```
+
+Applications decide:
+
+* Retry count
+* Backoff strategy
+* Circuit breaker behavior
+* Timeout policy
+
+---
+
+## Resilience4j Example
 
 ```xml
 <dependency>
-    <groupId>com.czetsuyatech</groupId>
-    <artifactId>nerv-exception-spring-boot-starter</artifactId>
-    <version>${nerv-exception.version}</version>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-spring-boot4</artifactId>
 </dependency>
 
 <dependency>
-    <groupId>org.springframework.kafka</groupId>
-    <artifactId>spring-kafka</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
 </dependency>
 ```
 
----
-
-## Kafka Configuration
+Configuration:
 
 ```yaml
-nerv:
-  exception:
-    kafka:
-      enabled: true
-      source: nerv-exception-demo
-      dlq-topic-suffix: .dlq
-
-spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
-
-    consumer:
-      group-id: nerv-exception-demo
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
-      properties:
-        spring.json.trusted.packages: "com.czetsuyatech.nerv.example.exception.kafka,com.czetsuyatech.nerv.exception.event"
-        spring.json.value.default.type: com.czetsuyatech.nerv.example.exception.kafka.PaymentMessage
+resilience4j:
+  retry:
+    instances:
+      paymentProvider:
+        max-attempts: 3
+        wait-duration: 500ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - feign.RetryableException
 ```
 
-For Spring Boot 4 / Spring Kafka 4, use `JacksonJsonSerializer` and `JacksonJsonDeserializer`.
-
----
-
-## Local Kafka
-
-```yaml
-services:
-  kafka:
-    image: apache/kafka:4.0.1
-    container_name: nerv-exception-kafka
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
-
-      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-```
-
-Start Kafka:
-
-```bash
-docker compose up -d
-```
-
----
-
-## Message Model
-
-```java
-public record PaymentMessage(
-    String paymentId,
-    String status
-) {
-}
-```
-
----
-
-## Producer
+Service:
 
 ```java
 @Service
 @RequiredArgsConstructor
-public class PaymentKafkaProducer {
+public class PaymentRetryService {
 
-    private final KafkaTemplate<String, PaymentMessage> kafkaTemplate;
+    private final PaymentProviderClient client;
 
-    public void publish(PaymentMessage message) {
-        kafkaTemplate.send("payments", message.paymentId(), message);
+    @Retry(name = "paymentProvider")
+    public String processPayment() {
+        return client.timeout();
     }
 }
 ```
 
 ---
 
-## Consumer
+# Error Code Registry
+
+Applications may register custom error code enums.
 
 ```java
-@Component
-@RequiredArgsConstructor
-public class PaymentKafkaConsumer {
-
-    private final NervKafkaErrorHandler errorHandler;
-
-    @KafkaListener(
-        topics = "payments",
-        groupId = "nerv-exception-demo"
-    )
-    public void consume(
-        PaymentMessage message,
-        ConsumerRecord<String, PaymentMessage> record
-    ) {
-        try {
-            if ("FAIL".equals(message.status())) {
-                throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
-            }
-
-            System.out.println("Payment processed: " + message.paymentId());
-        } catch (Exception ex) {
-            errorHandler.handle(record, ex);
-        }
-    }
+@Bean
+NervErrorCodeRegistry applicationErrorCodeRegistry() {
+    return new EnumNervErrorCodeRegistry(
+        PaymentErrorCode.values(),
+        CustomerErrorCode.values(),
+        OrderErrorCode.values()
+    );
 }
 ```
 
----
-
-## DLQ Consumer
-
-```java
-@Component
-public class PaymentKafkaDlqConsumer {
-
-    @KafkaListener(
-        topics = "payments.dlq",
-        groupId = "nerv-exception-demo-dlq"
-    )
-    public void consumeDlq(
-        NervErrorEvent event,
-        ConsumerRecord<String, NervErrorEvent> record
-    ) {
-        System.out.println("DLQ event received:");
-        System.out.println(event);
-
-        record.headers().forEach(header ->
-            System.out.println(header.key() + "=" + new String(header.value()))
-        );
-    }
-}
-```
-
----
-
-## Demo Controller
-
-```java
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/kafka/payments")
-public class PaymentKafkaDemoController {
-
-    private final PaymentKafkaProducer producer;
-
-    @PostMapping("/{id}")
-    public String publish(@PathVariable String id) {
-        producer.publish(new PaymentMessage(id, "PROCESSING"));
-        return "Payment message published: " + id;
-    }
-
-    @PostMapping("/{id}/fail")
-    public String publishFailing(@PathVariable String id) {
-        producer.publish(new PaymentMessage(id, "FAIL"));
-        return "Failing payment message published: " + id;
-    }
-}
-```
-
----
-
-## Successful Message Flow
-
-Request:
-
-```bash
-curl -X POST http://localhost:8080/kafka/payments/123
-```
-
-Flow:
+Resolution order:
 
 ```text
-POST /kafka/payments/123
-    ↓
-PaymentKafkaProducer
-    ↓
-payments topic
-    ↓
-PaymentKafkaConsumer
-    ↓
-Payment processed successfully
+Application Registry
+        ↓
+Native Registry
 ```
+
+Built-in errors remain available through:
+
+```java
+NativeNervErrorCodes
+```
+
+Duplicate error codes are detected during startup.
 
 ---
 
-## Failed Message Flow
+# Kafka Integration
 
-Request:
+Kafka support transforms processing failures into structured events.
 
-```bash
-curl -X POST http://localhost:8080/kafka/payments/timeout/fail
-```
+Features:
 
-Flow:
+* Error event generation
+* DLQ publishing
+* Trace preservation
+* Error metadata headers
+* Async error processing
+
+---
+
+## Message Flow
 
 ```text
-POST /kafka/payments/timeout/fail
+Producer
     ↓
-PaymentKafkaProducer
+payments
     ↓
-payments topic
+Consumer
     ↓
-PaymentKafkaConsumer
-    ↓
-NervException(PAYMENT_TIMEOUT)
+NervException
     ↓
 NervKafkaErrorHandler
     ↓
@@ -646,56 +489,7 @@ payments.dlq
 
 ---
 
-## DLQ Topic Resolution
-
-The DLQ topic is resolved from the original topic plus the configured suffix.
-
-```text
-original topic: payments
-suffix:         .dlq
-DLQ topic:      payments.dlq
-```
-
-Configured by:
-
-```yaml
-nerv:
-  exception:
-    kafka:
-      dlq-topic-suffix: .dlq
-```
-
----
-
-## Kafka Headers
-
-`NervKafkaHeaderMapper` maps error metadata into Kafka headers.
-
-Expected headers:
-
-| Header                 | Description             |
-| ---------------------- | ----------------------- |
-| `nerv-trace-id`        | Trace identifier        |
-| `nerv-span-id`         | Span identifier         |
-| `nerv-source`          | Source application      |
-| `nerv-parent-event-id` | Parent event identifier |
-| `nerv-error-code`      | Error code              |
-| `nerv-error-category`  | Error category          |
-
-Example output:
-
-```text
-nerv-trace-id=0af7651916cd43dd8448eb211c80319c
-nerv-span-id=b9c7c989f97918e1
-nerv-source=nerv-exception-demo
-nerv-parent-event-id=payment-timeout-failed
-nerv-error-code=PAYMENT_TIMEOUT
-nerv-error-category=INTEGRATION
-```
-
----
-
-## Example `NervErrorEvent`
+## Example Event
 
 ```json
 {
@@ -706,58 +500,104 @@ nerv-error-category=INTEGRATION
   "source": "nerv-exception-demo",
   "traceId": "0af7651916cd43dd8448eb211c80319c",
   "spanId": "b9c7c989f97918e1",
-  "parentEventId": "payment-timeout-failed",
-  "timestamp": "2026-06-22T10:15:30Z"
+  "parentEventId": "payment-timeout-failed"
 }
 ```
 
 ---
 
-## What Happens Internally
+## Kafka Headers
 
-1. A payment message is published to the `payments` topic.
-2. `PaymentKafkaConsumer` receives the message.
-3. If the message status is `FAIL`, the consumer throws a `NervException`.
-4. The exception is passed to `NervKafkaErrorHandler`.
-5. `NervKafkaErrorHandler` maps the exception into a `NervErrorEvent`.
-6. `NervKafkaDlqPublisher` publishes the event to `payments.dlq`.
-7. `NervKafkaHeaderMapper` writes error metadata into Kafka headers using `ProducerRecord`.
-8. `PaymentKafkaDlqConsumer` receives the DLQ event and prints the event plus headers.
+Published headers:
 
----
-
-## Why `ProducerRecord` Is Used
-
-Kafka headers must be attached to a `ProducerRecord`.
-
-`KafkaTemplate.send()` does not expose a direct overload for sending arbitrary headers with only topic, key, and value.
-
-So `NervKafkaDlqPublisher` uses:
-
-```java
-ProducerRecord<String, NervErrorEvent> record =
-    new ProducerRecord<>(dlqTopic, key, event);
-
-Headers headers = headerMapper.from(event);
-
-headers.forEach(record.headers()::add);
-
-return kafkaTemplate.send(record)
-    .thenApply(result -> null);
+```text
+nerv-trace-id
+nerv-span-id
+nerv-source
+nerv-parent-event-id
+nerv-error-code
+nerv-error-category
 ```
 
-This ensures the DLQ message contains both:
+---
 
-* structured `NervErrorEvent` payload
-* Kafka headers for routing, observability, and diagnostics
+# Demo Endpoints
 
+## Web
+
+```http
+GET /payments/123
+GET /payments/404
+GET /payments/timeout
+GET /payments/error
+```
+
+## Feign
+
+```http
+GET /feign/payments/not-found
+GET /feign/payments/timeout
+GET /feign/trace
+```
+
+## Retry
+
+```http
+GET /feign/retry/reset
+GET /feign/retry/timeout
+GET /feign/retry/attempts
+```
+
+## Kafka
+
+```http
+POST /kafka/payments/{id}
+POST /kafka/payments/{id}/fail
+```
 
 ---
 
-## Next Steps
+# Design Principles
 
-Planned additions:
+`nerv-exception` follows several core principles:
 
-* Kafka dead-letter queue demo
-* Distributed tracing integration
-* End-to-end integration scenarios
+1. Error codes are first-class citizens.
+2. Retryability belongs to the error contract.
+3. Tracing is delegated to Micrometer/OpenTelemetry.
+4. Retry frameworks remain application concerns.
+5. Error handling should be consistent across HTTP, Feign, and Kafka.
+6. Cross-service diagnostics should preserve original failure context.
+7. Infrastructure concerns should remain pluggable and optional.
+
+---
+
+# Repository Structure
+
+```text
+nerv-exception-api
+nerv-exception-core
+nerv-exception-spring-web
+nerv-exception-spring-feign
+nerv-exception-event
+nerv-exception-spring-kafka
+nerv-exception-spring-boot-starter
+
+nerv-exception-demo
+```
+
+---
+
+# What This Demo Proves
+
+This demo demonstrates:
+
+* Standardized HTTP error handling
+* Retry-aware Feign integration
+* OpenTelemetry-based distributed tracing
+* Cross-service error preservation
+* Kafka error event publishing
+* Dead-letter queue processing
+* Resilience4j retry integration
+* Custom error code registration
+
+Together these capabilities provide a consistent failure-management strategy across synchronous and asynchronous communication channels.
