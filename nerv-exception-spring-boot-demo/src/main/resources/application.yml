@@ -3,6 +3,13 @@ debug: true
 server:
   port: 8080
 
+management:
+  tracing:
+    export:
+      enabled: true
+    sampling:
+      probability: 1.0
+
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -16,6 +23,17 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
         spring.json.trusted.packages: "com.czetsuyatech.nerv.example.exception.kafka,com.czetsuyatech.nerv.exception.event"
+
+resilience4j:
+  retry:
+    instances:
+      default:
+        max-attempts: 3
+        wait-duration: 2000ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - feign.RetryableException
 
 nerv:
   exception:

@@ -2,10 +2,12 @@ package com.czetsuyatech.nerv.example.exception.web.controller;
 
 import com.czetsuyatech.nerv.example.exception.error.PaymentErrorCode;
 import com.czetsuyatech.nerv.exception.core.NervException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 public class PaymentController {
 

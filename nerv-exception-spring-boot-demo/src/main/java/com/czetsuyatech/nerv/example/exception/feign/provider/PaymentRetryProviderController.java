@@ -1,6 +1,7 @@
-package com.czetsuyatech.nerv.example.exception.retry;
+package com.czetsuyatech.nerv.example.exception.feign.provider;
 
 import com.czetsuyatech.nerv.example.exception.error.PaymentErrorCode;
+import com.czetsuyatech.nerv.example.exception.retry.PaymentRetryState;
 import com.czetsuyatech.nerv.exception.core.NervException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
