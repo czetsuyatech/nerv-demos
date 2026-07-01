@@ -10,27 +10,41 @@
   </parent>
 
   <groupId>com.czetsuyatech.nerv</groupId>
-  <artifactId>spring-envers-nerv-example</artifactId>
+  <artifactId>nerv-exception-spring-boot-demo</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <properties>
     <java.version>25</java.version>
-    <liquibase.version>5.0.2</liquibase.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
   </properties>
 
   <dependencies>
-    <!-- Your audit library -->
+    <!-- Your exception library -->
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
-      <artifactId>nerv-audit-spring-boot-starter</artifactId>
-      <version>1.0.0</version>
+      <artifactId>nerv-exception-spring-boot-starter</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
-      <artifactId>nerv-audit-core</artifactId>
-      <version>1.0.0</version>
+      <artifactId>nerv-exception-spring-web</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.czetsuyatech.nerv</groupId>
+      <artifactId>nerv-exception-spring-feign</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.czetsuyatech.nerv</groupId>
+      <artifactId>nerv-exception-event</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.czetsuyatech.nerv</groupId>
+      <artifactId>nerv-exception-spring-kafka</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <!-- Spring Boot essentials -->
@@ -42,28 +56,30 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-
-    <!-- PostgreSQL -->
     <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-    </dependency>
-
-    <!-- Hibernate -->
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-envers</artifactId>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-core</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aspectj</artifactId>
     </dependency>
-
-    <!-- Liquibase -->
     <dependency>
-      <groupId>org.liquibase</groupId>
-      <artifactId>liquibase-core</artifactId>
-      <version>${liquibase.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-opentelemetry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-spring-boot4</artifactId>
+      <version>2.4.0</version>
     </dependency>
 
     <!-- Dev tools and Lombok -->
@@ -139,22 +155,6 @@
               <artifactId>lombok</artifactId>
             </exclude>
           </excludes>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-maven-plugin</artifactId>
-        <version>${liquibase.version}</version>
-        <configuration>
-          <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
-          <outputChangeLogFile>src/main/resources/db/changelog/changelog_generated.xml
-          </outputChangeLogFile>
-          <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432/nerv-examples</url>
-          <username>nerv</username>
-          <password>nerv</password>
-          <defaultSchemaName>nervaudit</defaultSchemaName>
         </configuration>
       </plugin>
     </plugins>
