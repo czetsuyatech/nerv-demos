@@ -17,6 +17,7 @@
     <java.version>25</java.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
+    <nerv-exception.version>1.1.0</nerv-exception.version>
   </properties>
 
   <dependencies>
@@ -24,27 +25,27 @@
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-exception-spring-boot-starter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${nerv-exception.version}</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-exception-spring-web</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${nerv-exception.version}</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-exception-spring-feign</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${nerv-exception.version}</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-exception-event</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${nerv-exception.version}</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-exception-spring-kafka</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${nerv-exception.version}</version>
     </dependency>
 
     <!-- Spring Boot essentials -->

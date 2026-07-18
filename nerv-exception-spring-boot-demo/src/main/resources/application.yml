@@ -23,6 +23,8 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
         spring.json.trusted.packages: "com.czetsuyatech.nerv.example.exception.kafka,com.czetsuyatech.nerv.exception.event"
+  application:
+    name: nerv-exception-demo
 
 resilience4j:
   retry:

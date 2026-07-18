@@ -14,11 +14,11 @@ public class PaymentController {
   @GetMapping("/payments/{id}")
   public String findPayment(@PathVariable String id) {
     if ("404".equals(id)) {
-      throw new NervException(PaymentErrorCode.PAYMENT_NOT_FOUND);
+      throw NervException.of(PaymentErrorCode.PAYMENT_NOT_FOUND);
     }
 
     if ("timeout".equals(id)) {
-      throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
+      throw NervException.of(PaymentErrorCode.PAYMENT_TIMEOUT);
     }
 
     if ("error".equals(id)) {

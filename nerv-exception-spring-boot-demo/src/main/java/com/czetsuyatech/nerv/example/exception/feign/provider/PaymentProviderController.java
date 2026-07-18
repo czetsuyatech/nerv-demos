@@ -15,11 +15,11 @@ public class PaymentProviderController {
 
   @GetMapping("/provider/payments/not-found")
   public String notFound() {
-    throw new NervException(PaymentErrorCode.PAYMENT_NOT_FOUND);
+    throw NervException.of(PaymentErrorCode.PAYMENT_NOT_FOUND);
   }
 
   @GetMapping("/provider/payments/timeout")
   public String timeout() {
-    throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
+    throw  NervException.of(PaymentErrorCode.PAYMENT_TIMEOUT);
   }
 }

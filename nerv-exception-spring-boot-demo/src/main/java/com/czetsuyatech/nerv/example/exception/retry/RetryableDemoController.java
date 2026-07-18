@@ -10,11 +10,11 @@ public class RetryableDemoController {
 
     @GetMapping("/retryable/business")
     public String businessError() {
-        throw new NervException(PaymentErrorCode.PAYMENT_NOT_FOUND);
+        throw NervException.of(PaymentErrorCode.PAYMENT_NOT_FOUND);
     }
 
     @GetMapping("/retryable/integration")
     public String integrationError() {
-        throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
+        throw NervException.of(PaymentErrorCode.PAYMENT_TIMEOUT);
     }
 }

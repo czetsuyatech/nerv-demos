@@ -22,7 +22,7 @@ public class PaymentRetryProviderController {
     log.debug("Provider retry attempt: {}", attempt);
 
     if (attempt < 3) {
-      throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
+      throw NervException.of(PaymentErrorCode.PAYMENT_TIMEOUT);
     }
 
     return "Payment provider succeeded on attempt " + attempt;

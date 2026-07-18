@@ -27,7 +27,7 @@ public class PaymentKafkaConsumer {
   ) {
     try {
       if ("FAIL".equals(message.status())) {
-        throw new NervException(PaymentErrorCode.PAYMENT_TIMEOUT);
+        throw NervException.of(PaymentErrorCode.PAYMENT_TIMEOUT);
       }
 
       log.debug("Payment processed: {}", message.paymentId());
