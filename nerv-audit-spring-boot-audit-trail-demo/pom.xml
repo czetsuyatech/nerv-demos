@@ -14,7 +14,6 @@
   <version>0.0.1-SNAPSHOT</version>
 
   <properties>
-    <java.version>25</java.version>
     <liquibase.version>5.0.2</liquibase.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
