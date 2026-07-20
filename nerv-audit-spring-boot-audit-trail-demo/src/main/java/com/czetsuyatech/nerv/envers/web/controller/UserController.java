@@ -1,8 +1,8 @@
-package com.czetsuyatech.envers.web.controller;
+package com.czetsuyatech.nerv.envers.web.controller;
 
-import com.czetsuyatech.envers.application.dto.AddressDTO;
-import com.czetsuyatech.envers.application.dto.UserDTO;
-import com.czetsuyatech.envers.service.UserService;
+import com.czetsuyatech.nerv.envers.application.dto.AddressDTO;
+import com.czetsuyatech.nerv.envers.application.dto.UserDTO;
+import com.czetsuyatech.nerv.envers.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -145,7 +145,7 @@ This repository demonstrates a pro-style flow where the app exposes operational 
 - `GET /nerv-audit/com.czetsuyatech.envers.persistence.entity.UserEntity?offset=2&limit=2`
 
 Controller location:
-- `src/main/java/com/czetsuyatech/envers/web/controller/UserController.java`
+- `src/main/java/com/czetsuyatech/nerv/envers/web/controller/UserController.java`
 - `src/main/java/com.czetsuyatech.audit.web.controller/AuditController.java`
 
 Service revision query implementation uses Envers `AuditReader`:
@@ -194,7 +194,7 @@ curl http://localhost:8080/users/1
 
 ```bash
 curl http://localhost:8080/nerv-audit/horizontal/UserEntity?offset=2&limit=10
-curl http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.envers.persistence.entity.UserEntity?offset=2&limit=2
+curl http://localhost:8080/nerv-audit/vertical/entity.persistence.com.czetsuyatech.nerv.envers.UserEntity?offset=2&limit=2
 ```
 
 ## 10. Expected behavior
@@ -212,9 +212,9 @@ curl http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.envers.persisten
 
 ## 12. Project references
 
-- App entry: `src/main/java/com/czetsuyatech/envers/Application.java`
-- Entity: `src/main/java/com/czetsuyatech/envers/persistence/entity/UserEntity.java`
-- Service: `src/main/java/com/czetsuyatech/envers/service/impl/UserServiceImpl.java`
-- Controller: `src/main/java/com/czetsuyatech/envers/web/controller/UserController.java`
+- App entry: `src/main/java/com/czetsuyatech/nerv/envers/Application.java`
+- Entity: `src/main/java/com/czetsuyatech/nerv/envers/persistence/entity/UserEntity.java`
+- Service: `src/main/java/com/czetsuyatech/nerv/envers/service/impl/UserServiceImpl.java`
+- Controller: `src/main/java/com/czetsuyatech/nerv/envers/web/controller/UserController.java`
 - Config: `src/main/resources/application.yml`
 

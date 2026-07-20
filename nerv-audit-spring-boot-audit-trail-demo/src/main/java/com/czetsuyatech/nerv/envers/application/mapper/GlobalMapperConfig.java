@@ -1,4 +1,4 @@
-package com.czetsuyatech.envers.application.mapper;
+package com.czetsuyatech.nerv.envers.application.mapper;
 
 import org.mapstruct.MapperConfig;
 import org.mapstruct.MappingConstants;

@@ -1,4 +1,4 @@
-package com.czetsuyatech.envers.application.dto;
+package com.czetsuyatech.nerv.envers.application.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

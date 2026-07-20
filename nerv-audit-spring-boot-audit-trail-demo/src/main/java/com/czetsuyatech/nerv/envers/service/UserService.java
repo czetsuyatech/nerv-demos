@@ -1,7 +1,7 @@
-package com.czetsuyatech.envers.service;
+package com.czetsuyatech.nerv.envers.service;
 
-import com.czetsuyatech.envers.application.dto.AddressDTO;
-import com.czetsuyatech.envers.application.dto.UserDTO;
+import com.czetsuyatech.nerv.envers.application.dto.AddressDTO;
+import com.czetsuyatech.nerv.envers.application.dto.UserDTO;
 import java.util.Optional;
 
 public interface UserService {

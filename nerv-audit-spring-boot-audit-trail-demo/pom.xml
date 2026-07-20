@@ -6,17 +6,17 @@
   <parent>
     <groupId>com.czetsuyatech.nerv</groupId>
     <artifactId>nerv-examples</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <groupId>com.czetsuyatech.nerv</groupId>
   <artifactId>spring-envers-nerv-example</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
 
   <properties>
     <liquibase.version>5.0.2</liquibase.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
+    <nerv-audit.version>1.2.0</nerv-audit.version>
   </properties>
 
   <dependencies>
@@ -24,12 +24,12 @@
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-audit-spring-boot-starter</artifactId>
-      <version>1.0.0</version>
+      <version>${nerv-audit.version}</version>
     </dependency>
     <dependency>
       <groupId>com.czetsuyatech.nerv</groupId>
       <artifactId>nerv-audit-core</artifactId>
-      <version>1.0.0</version>
+      <version>${nerv-audit.version}</version>
     </dependency>
 
     <!-- Spring Boot essentials -->

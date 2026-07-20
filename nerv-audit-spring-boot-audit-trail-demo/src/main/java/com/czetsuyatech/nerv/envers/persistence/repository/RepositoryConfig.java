@@ -1,4 +1,4 @@
-package com.czetsuyatech.envers.persistence.repository;
+package com.czetsuyatech.nerv.envers.persistence.repository;
 
 import org.springframework.context.annotation.Configuration;
 

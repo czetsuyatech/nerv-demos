@@ -174,7 +174,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.envers.persistence.entity.UserEntity?offset=0&limit=10",
+              "raw": "http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.nerv.envers.persistence.entity.UserEntity?offset=0&limit=10",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -183,7 +183,7 @@
               "path": [
                 "nerv-audit",
                 "vertical",
-                "com.czetsuyatech.envers.persistence.entity.UserEntity"
+                "com.czetsuyatech.nerv.envers.persistence.entity.UserEntity"
               ],
               "query": [
                 {
@@ -205,7 +205,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.envers.persistence.entity.UserEntity?fieldName=FIRSTNAME&oldValue=Edward&newValue=czetsuya",
+              "raw": "http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.nerv.envers.persistence.entity.UserEntity?fieldName=FIRSTNAME&oldValue=Edward&newValue=czetsuya",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -214,7 +214,7 @@
               "path": [
                 "nerv-audit",
                 "vertical",
-                "com.czetsuyatech.envers.persistence.entity.UserEntity"
+                "com.czetsuyatech.nerv.envers.persistence.entity.UserEntity"
               ],
               "query": [
                 {
@@ -239,6 +239,46 @@
     {
       "name": "Exception",
       "item": [
+        {
+          "name": "Debug | Trace",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/debug/trace",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "debug",
+                "trace"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Debug | Resolver",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/debug/resolver",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "debug",
+                "resolver"
+              ]
+            }
+          },
+          "response": []
+        },
         {
           "name": "Error | 404",
           "request": {
@@ -356,6 +396,152 @@
               "path": [
                 "feign",
                 "trace"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Kafka | Ok",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/kafka/payments/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "kafka",
+                "payments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Kafka | Timeout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/kafka/payments/1/fail",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "kafka",
+                "payments",
+                "1",
+                "fail"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retry | 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/retryable/business",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "retryable",
+                "business"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retry | Timeout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/retryable/integration",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "retryable",
+                "integration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feign | Retry | Reset",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/feign/retry/reset",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "feign",
+                "retry",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feign | Retry | Attempts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/feign/retry/attempts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "feign",
+                "retry",
+                "attempts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feign | Retry | Timeout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/feign/retry/timeout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "feign",
+                "retry",
+                "timeout"
               ]
             }
           },

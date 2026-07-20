@@ -1,7 +1,7 @@
-package com.czetsuyatech.envers.persistence.config;
+package com.czetsuyatech.nerv.envers.persistence.config;
 
-import com.czetsuyatech.envers.persistence.entity.EntityConfig;
-import com.czetsuyatech.envers.persistence.repository.RepositoryConfig;
+import com.czetsuyatech.nerv.envers.persistence.entity.EntityConfig;
+import com.czetsuyatech.nerv.envers.persistence.repository.RepositoryConfig;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

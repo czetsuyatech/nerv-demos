@@ -1,4 +1,4 @@
-package com.czetsuyatech.envers.config;
+package com.czetsuyatech.nerv.envers.config;
 
 import java.util.Map;
 import lombok.Data;

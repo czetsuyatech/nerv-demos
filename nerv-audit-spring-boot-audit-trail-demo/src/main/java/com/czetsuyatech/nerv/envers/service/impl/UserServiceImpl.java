@@ -1,12 +1,12 @@
-package com.czetsuyatech.envers.service.impl;
+package com.czetsuyatech.nerv.envers.service.impl;
 
-import com.czetsuyatech.envers.application.dto.AddressDTO;
-import com.czetsuyatech.envers.application.dto.UserDTO;
-import com.czetsuyatech.envers.application.mapper.AddressMapper;
-import com.czetsuyatech.envers.application.mapper.UserMapper;
-import com.czetsuyatech.envers.persistence.repository.AddressRepository;
-import com.czetsuyatech.envers.persistence.repository.UserRepository;
-import com.czetsuyatech.envers.service.UserService;
+import com.czetsuyatech.nerv.envers.application.dto.AddressDTO;
+import com.czetsuyatech.nerv.envers.application.dto.UserDTO;
+import com.czetsuyatech.nerv.envers.application.mapper.AddressMapper;
+import com.czetsuyatech.nerv.envers.application.mapper.UserMapper;
+import com.czetsuyatech.nerv.envers.persistence.repository.AddressRepository;
+import com.czetsuyatech.nerv.envers.persistence.repository.UserRepository;
+import com.czetsuyatech.nerv.envers.service.UserService;
 import com.github.javafaker.Faker;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

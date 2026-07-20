@@ -1,6 +1,6 @@
-package com.czetsuyatech.envers.config;
+package com.czetsuyatech.nerv.envers.config;
 
-import com.czetsuyatech.envers.persistence.entity.EntityConfig;
+import com.czetsuyatech.nerv.envers.persistence.entity.EntityConfig;
 import javax.sql.DataSource;
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

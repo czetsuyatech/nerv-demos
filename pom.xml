@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.czetsuyatech.nerv</groupId>
   <artifactId>nerv-examples</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>NERV | Examples</name>
   <packaging>pom</packaging>
 

@@ -1,4 +1,4 @@
-package com.czetsuyatech.envers.persistence.entity;
+package com.czetsuyatech.nerv.envers.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

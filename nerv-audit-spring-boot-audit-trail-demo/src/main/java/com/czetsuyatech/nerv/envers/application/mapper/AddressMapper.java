@@ -1,7 +1,7 @@
-package com.czetsuyatech.envers.application.mapper;
+package com.czetsuyatech.nerv.envers.application.mapper;
 
-import com.czetsuyatech.envers.application.dto.AddressDTO;
-import com.czetsuyatech.envers.persistence.entity.AddressEntity;
+import com.czetsuyatech.nerv.envers.application.dto.AddressDTO;
+import com.czetsuyatech.nerv.envers.persistence.entity.AddressEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
