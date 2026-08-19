@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: nerv-event-spring-boot-demo
+  datasource:
+    url: jdbc:postgresql://localhost:5432/nerv_event_demo
+    username: nerv
+    password: nerv
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+nerv:
+  event:
+    destinations:
+      orders-kafka:
+        broker: kafka
+        target: order-events
+      payments-sqs:
+        broker: sqs
+        target: payments
+      notifications-sqs:
+        broker: sqs
+        target: notifications
+    dispatcher:
+      polling:
+        min-interval: 1s
+        max-interval: 5s
+    inbox:
+      retry:
+        max-attempts: 3
+        initial-delay: 2s
+        max-delay: 5s
+      dispatcher:
+        polling:
+          min-interval: 1s
+          max-interval: 5s
+    retention:
+      polling:
+        min-interval: 30s
+        max-interval: 60s
+    kafka:
+      enabled: true
+      consumers:
+        order-events:
+          enabled: true
+          topic: order-events
+          group-id: nerv-event-demo-orders
+          concurrency: 1
+    sqs:
+      enabled: true
+      clients:
+        account-a:
+          region: us-east-1
+          endpoint: http://localhost:4566
+        account-b:
+          region: us-east-1
+          endpoint: http://localhost:4566
+      destinations:
+        payments:
+          client: account-a
+          queue: payment-events
+        notifications:
+          client: account-b
+          queue: notification-events
+      consumers:
+        payment-events:
+          enabled: true
+          client: account-a
+          queue: payment-events
+          poll-timeout: 5s
+          visibility-timeout: 30s
+    operations:
+      web:
+        enabled: true
+        payload:
+          enabled: false

@@ -45,6 +45,7 @@
   <modules>
     <module>nerv-audit-spring-boot-audit-trail-demo</module>
     <module>nerv-exception-spring-boot-demo</module>
+    <module>nerv-event-spring-boot-demo</module>
   </modules>
 
   <dependencyManagement>
