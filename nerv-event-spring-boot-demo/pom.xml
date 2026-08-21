@@ -14,7 +14,7 @@
   <name>NERV Event Spring Boot Demo</name>
 
   <properties>
-    <nerv-event.version>0.1.0-SNAPSHOT</nerv-event.version>
+    <nerv-event.version>1.0.0</nerv-event.version>
     <skipITs>true</skipITs>
   </properties>
 

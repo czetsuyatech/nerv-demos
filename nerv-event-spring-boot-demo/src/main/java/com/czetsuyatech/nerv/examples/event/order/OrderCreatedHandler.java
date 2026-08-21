@@ -10,6 +10,7 @@ import com.czetsuyatech.nerv.examples.event.payment.PaymentRequested;
 import java.time.Clock;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Kafka consumer handler which starts the SQS payment flow using only public NERV types. */
 @Component
@@ -34,6 +35,7 @@ public class OrderCreatedHandler implements EventHandler<OrderCreated> {
   }
 
   @Override
+  @Transactional
   public void handle(EventMessage<OrderCreated> event) {
     OrderCreated order = event.payload();
     EventMessage<PaymentRequested> payment = EventMessage.<PaymentRequested>builder()
