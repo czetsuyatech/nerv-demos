@@ -99,7 +99,7 @@ default (`nerv.event.operations.web.payload.enabled=false`).
 
 ```bash
 curl http://localhost:8080/management/nerv-event/outbox
-curl "http://localhost:8080/management/nerv-event/inbox?status=FAILED"
+curl http://localhost:8080/management/nerv-event/inbox?status=FAILED
 curl -X POST http://localhost:8080/management/nerv-event/inbox/EVENT_ID/retry
 curl http://localhost:8080/actuator/health
 curl http://localhost:8080/actuator/metrics
