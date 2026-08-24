@@ -5,8 +5,7 @@ This project demonstrates how to use `nerv-audit-spring-boot-starter` with Sprin
 It includes examples for:
 - Horizontal auditing
 - Vertical auditing
-- Lite auditing flow (create audit + + endpoints to fetch revisions)
-- Pro auditing flow (create, update, delete + endpoints to fetch revisions)
+- Create, update, delete, and collection auditing with revision endpoints
 
 ## 1. What this example contains
 
@@ -35,9 +34,9 @@ Already configured in `pom.xml`:
 
 ```xml
 <dependency>
-  <groupId>com.czetsuyatech</groupId>
-  <artifactId>nerv-audit-spring-boot-starter</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <groupId>com.czetsuyatech.nerv</groupId>
+  <artifactId>nerv-audit</artifactId>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -48,10 +47,6 @@ Already configured in `pom.xml`:
 ```yaml
 nerv:
   audit:
-    license:
-      key:
-      public-key: czetsuyatech_nerv_public.pem
-      enabled: true
     web:
       enabled: true
     audit-insert: true
@@ -85,12 +80,12 @@ Liquibase file used:
 Liquibase file used:
 - `src/main/resources/db/changelog/audit/vertical/002-user-audit-tables.xml`
 
-## 6. Lite version example (Create + revision endpoints)
+## 6. Create and revision endpoint example
 
-Use this when you only need auditing generated from create JPA operations, with revision APIs.
+Use this when you need auditing generated from JPA operations, with revision APIs.
 
 Minimum requirements:
-1. Add starter dependency.
+1. Add the `nerv-audit` dependency.
 2. Mark entities with `@Audited`.
 3. Persist via Spring Data JPA.
 
@@ -119,7 +114,7 @@ Service operation example:
 public class UserService {
   private final UserRepository userRepository;
 
-  public UserEntity createLite() {
+  public UserEntity createUser() {
     UserEntity user = new UserEntity();
     user.setUsername("czetsuya");
     user.setFirstName("Edward");
@@ -129,9 +124,9 @@ public class UserService {
 }
 ```
 
-## 7. Pro version example (CRUD + revision endpoints)
+## 7. Full CRUD and revision endpoint example
 
-This repository demonstrates a pro-style flow where the app exposes operational APIs plus revision retrieval endpoints.
+This repository demonstrates a flow where the app exposes operational APIs plus revision retrieval endpoints.
 
 ### CRUD endpoints
 
@@ -210,7 +205,20 @@ curl http://localhost:8080/nerv-audit/vertical/entity.persistence.com.czetsuyate
 - If `nerv.audit.audit-strategy-type: vertical`, use vertical changelog and tables.
 - Keep the selected strategy and Liquibase schema in sync before startup.
 
-## 12. Project references
+## 12. Tests
+
+Run the demo test suite with:
+
+```bash
+mvn test
+```
+
+The suite covers the user REST controller, service behavior, and an H2-backed Spring Boot
+integration scenario that starts NERV Audit and persists a user through the demo service. The
+integration test uses horizontal auditing because the production vertical strategy requires the
+corresponding Liquibase audit-table schema.
+
+## 13. Project references
 
 - App entry: `src/main/java/com/czetsuyatech/nerv/envers/Application.java`
 - Entity: `src/main/java/com/czetsuyatech/nerv/envers/persistence/entity/UserEntity.java`

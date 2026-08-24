@@ -34,10 +34,6 @@ spring:
 
 nerv:
   audit:
-    license:
-      key: eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJjemV0c3V5YXRlY2giLCJzdWIiOiJjemV0c3V5YXRlY2giLCJ0eXBlIjoicHJvIiwiZmVhdHVyZXMiOlsid2ViX3NlYXJjaCIsImF1ZGl0X2NyZWF0ZSIsImF1ZGl0X3VwZGF0ZSIsImF1ZGl0X2RlbGV0ZSJdLCJleHBpcnkiOjE3ODQ2ODM5MTQsImlzc3VlZEJ5IjoiY3pldHN1eWF0ZWNoIiwiZW1haWwiOiJjemV0c3V5YUBnbWFpbC5jb20iLCJpYXQiOjE3ODQ1MTExMTQsImV4cCI6MTc4NDY4MzkxNH0.Z8ILAVp3wjSSWp_aRd2-6kTMZGZdUzEXj1cI24sc0fp-2131VNgX0tkFOhoc0DOc0tTD8BjOU_V0InhnlDIVuAb-MZQvfq7IFTi5wd9w4y-nSe2yCtcYbDGtSvmdw72HQM9OSYuPpfcmh0n8ojeXoTagBUorzrOcVqsRVVCOTDanpLhv1p-LxSDZ6ClF5bM7yPg5Fc8Hf_NUFap33bUZCgGoRXsN-V-aqyQnro3PbxCxOgqhJR7JIB7UxLAxHl9tjP8CQ0oLcIiAuZ_dzAiwhHscM81bqIeJ0VL8_0JUkXjRTXtkElLqIC6oolwA3q0KReAYrkHGe9mF0K0ZBgKRSQ
-      public-key: czetsuyatech_nerv_public.pem
-      enabled: true
     web:
       enabled: true
     audit-insert: true
