@@ -16,7 +16,7 @@
     <liquibase.version>5.0.2</liquibase.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
-    <nerv-audit.version>1.2.0</nerv-audit.version>
+    <nerv-audit.version>2.0.0</nerv-audit.version>
   </properties>
 
   <dependencies>
@@ -27,30 +27,10 @@
       <version>${nerv-audit.version}</version>
     </dependency>
 
-    <!-- Spring Boot essentials -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
     <!-- PostgreSQL -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-    </dependency>
-
-    <!-- Hibernate -->
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-envers</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-core</artifactId>
     </dependency>
 
     <!-- Liquibase -->
