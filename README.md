@@ -29,6 +29,7 @@ Whether you're evaluating a NERV library or integrating it into an existing appl
 |---------|-------------|
 | **nerv-audit-spring-boot-audit-trail-demo** | Demonstrates how to integrate **nerv-audit** into a Spring Boot application to provide entity auditing, revision history, and audit trails. |
 | **nerv-exception-spring-boot-demo** | Demonstrates standardized exception handling, validation, and RFC 7807 Problem Details responses using **nerv-exception**. |
+| **nerv-event-spring-boot-demo** | An external-consumer acceptance demo for **nerv-event**: transactional outbox, Kafka and SQS delivery, inbox retries, operations web, and Actuator. |
 
 ---
 
@@ -37,7 +38,8 @@ Whether you're evaluating a NERV library or integrating it into an existing appl
 ```text
 nerv-examples
 ├── nerv-audit-spring-boot-audit-trail-demo
-└── nerv-exception-spring-boot-demo
+├── nerv-exception-spring-boot-demo
+└── nerv-event-spring-boot-demo
 ```
 
 Additional examples will be added as the NERV ecosystem grows.
