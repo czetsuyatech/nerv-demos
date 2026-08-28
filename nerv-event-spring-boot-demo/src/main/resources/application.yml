@@ -36,21 +36,21 @@ nerv:
         target: notifications
     dispatcher:
       polling:
-        min-interval: 1s
-        max-interval: 5s
+        min-interval: 5m
+        max-interval: 10m
     inbox:
       retry:
         max-attempts: 3
-        initial-delay: 2s
-        max-delay: 5s
+        initial-delay: 5m
+        max-delay: 10m
       dispatcher:
         polling:
-          min-interval: 1s
-          max-interval: 5s
+          min-interval: 5m
+          max-interval: 10m
     retention:
       polling:
-        min-interval: 30s
-        max-interval: 60s
+        min-interval: 5m
+        max-interval: 10m
     kafka:
       enabled: true
       consumers:
@@ -87,3 +87,11 @@ nerv:
         enabled: true
         payload:
           enabled: false
+    observability:
+      enabled: true
+      metrics:
+        enabled: true
+      tracing:
+        enabled: true
+      health:
+        enabled: true

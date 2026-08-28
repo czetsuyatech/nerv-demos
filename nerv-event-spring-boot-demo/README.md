@@ -37,7 +37,7 @@ identities. Business code never selects or calls an SQS client.
 
 - Java 21 and Maven 3.9+
 - Docker Compose
-- A locally available `0.1.0-SNAPSHOT` build of `nerv-event` (from its checkout run
+- A locally available `1.0.0` build of `nerv-event` (from its checkout run
   `mvn clean install` once)
 
 The starter-owned LocalStack SQS clients use the standard AWS credentials provider. Set harmless
