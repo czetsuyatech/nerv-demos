@@ -6,7 +6,7 @@ logging:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/nerv-examples?currentSchema=nervaudit
+    url: jdbc:postgresql://localhost:5432/nerv_examples?currentSchema=nervaudit
     driver-class-name: org.postgresql.Driver
     username: nerv
     password: nerv

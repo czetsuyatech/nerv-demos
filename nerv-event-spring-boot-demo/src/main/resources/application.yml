@@ -2,9 +2,11 @@ spring:
   application:
     name: nerv-event-spring-boot-demo
   datasource:
-    url: jdbc:postgresql://localhost:5432/nerv_event_demo
+    url: jdbc:postgresql://localhost:5432/nerv_examples
     username: nerv
     password: nerv
+    hikari:
+      schema: nervevent
   jpa:
     hibernate:
       ddl-auto: validate
