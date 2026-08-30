@@ -82,8 +82,6 @@ nerv:
           enabled: true
           client: account-a
           queue: payment-events
-          poll-timeout: 1m
-          visibility-timeout: 2m
     operations:
       web:
         enabled: true
