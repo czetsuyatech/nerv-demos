@@ -38,21 +38,21 @@ nerv:
         target: notifications
     dispatcher:
       polling:
-        min-interval: 5m
-        max-interval: 10m
+        min-interval: 1m
+        max-interval: 2m
     inbox:
       retry:
         max-attempts: 3
-        initial-delay: 5m
-        max-delay: 10m
+        initial-delay: 1m
+        max-delay: 2m
       dispatcher:
         polling:
-          min-interval: 5m
-          max-interval: 10m
+          min-interval: 1m
+          max-interval: 2m
     retention:
       polling:
-        min-interval: 5m
-        max-interval: 10m
+        min-interval: 1m
+        max-interval: 2m
     kafka:
       enabled: true
       consumers:
@@ -82,8 +82,8 @@ nerv:
           enabled: true
           client: account-a
           queue: payment-events
-          poll-timeout: 5s
-          visibility-timeout: 30s
+          poll-timeout: 1m
+          visibility-timeout: 2m
     operations:
       web:
         enabled: true
