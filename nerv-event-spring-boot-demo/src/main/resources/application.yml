@@ -1,3 +1,8 @@
+logging:
+  level:
+    root: INFO
+    "com.czetsuyatech.nerv.event": trace
+
 spring:
   application:
     name: nerv-event-spring-boot-demo
