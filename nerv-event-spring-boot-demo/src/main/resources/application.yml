@@ -1,6 +1,7 @@
 logging:
   level:
     root: INFO
+    "org.apache": warn
     "com.czetsuyatech.nerv.event": trace
 
 spring:

@@ -25,6 +25,12 @@ REST POST /orders
 consumption is configured by NERV; the handlers implement only `EventHandler<T>` and have no
 Kafka/SQS annotations or imports.
 
+The demo registers two ordered `EventHandlerInterceptor` beans. `EventUserContextInterceptor` creates a simple
+ThreadLocal execution context before each handler and restores the prior context in `finally`. `EventContextInterceptor`
+snapshots MDC, adds the event ID, type, and optional correlation ID, then restores the complete prior MDC map in
+`finally`. They demonstrate the same broker-neutral chain for Kafka, SQS, and scheduled Inbox retry executions without
+affecting duplicate handling or acknowledgement behavior.
+
 The app also demonstrates a named multi-client SQS configuration:
 
 - `payments` routes through `account-a` to `payment-events`.
