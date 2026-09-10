@@ -9,20 +9,17 @@ import com.czetsuyatech.nerv.event.publisher.EventPublisher;
 import com.czetsuyatech.nerv.examples.event.payment.PaymentRequested;
 import java.time.Clock;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Kafka consumer handler which starts the SQS payment flow using only public NERV types. */
 @Component
+@RequiredArgsConstructor
 public class OrderCreatedHandler implements EventHandler<OrderCreated> {
 
   private final EventPublisher eventPublisher;
   private final Clock clock;
-
-  public OrderCreatedHandler(EventPublisher eventPublisher, Clock clock) {
-    this.eventPublisher = eventPublisher;
-    this.clock = clock;
-  }
 
   @Override
   public String eventType() {
@@ -46,6 +43,7 @@ public class OrderCreatedHandler implements EventHandler<OrderCreated> {
         .correlationId(event.correlationId())
         .payload(new PaymentRequested(order.orderId(), order.customerId(), clock.instant()))
         .build();
+
     eventPublisher.publish(EventPublication.<PaymentRequested>builder()
         .event(payment)
         .destination(new Destination("payments-sqs"))

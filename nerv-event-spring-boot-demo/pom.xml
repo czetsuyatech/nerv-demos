@@ -14,7 +14,7 @@
   <name>NERV Event Spring Boot Demo</name>
 
   <properties>
-    <nerv-event.version>1.0.0</nerv-event.version>
+    <nerv-event.version>2.0.0</nerv-event.version>
     <skipITs>true</skipITs>
   </properties>
 
@@ -87,10 +87,28 @@
       <version>2.0.5</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

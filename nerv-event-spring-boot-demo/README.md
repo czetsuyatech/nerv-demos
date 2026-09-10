@@ -25,6 +25,12 @@ REST POST /orders
 consumption is configured by NERV; the handlers implement only `EventHandler<T>` and have no
 Kafka/SQS annotations or imports.
 
+The demo registers two ordered `EventHandlerInterceptor` beans. `EventUserContextInterceptor` creates a simple
+ThreadLocal execution context before each handler and restores the prior context in `finally`. `EventContextInterceptor`
+snapshots MDC, adds the event ID, type, and optional correlation ID, then restores the complete prior MDC map in
+`finally`. They demonstrate the same broker-neutral chain for Kafka, SQS, and scheduled Inbox retry executions without
+affecting duplicate handling or acknowledgement behavior.
+
 The app also demonstrates a named multi-client SQS configuration:
 
 - `payments` routes through `account-a` to `payment-events`.
@@ -37,7 +43,7 @@ identities. Business code never selects or calls an SQS client.
 
 - Java 21 and Maven 3.9+
 - Docker Compose
-- A locally available `0.1.0-SNAPSHOT` build of `nerv-event` (from its checkout run
+- A locally available `2.0.0` build of `nerv-event` (from its checkout run
   `mvn clean install` once)
 
 The starter-owned LocalStack SQS clients use the standard AWS credentials provider. Set harmless
@@ -59,8 +65,9 @@ mvn spring-boot:run
 
 The application connects to PostgreSQL at `localhost:5432`, Kafka at `localhost:9092`, and
 LocalStack at `localhost:4566`. Flyway runs the copied, immutable canonical NERV PostgreSQL
-migrations as application-owned `V1`–`V4` migrations, then applies `V5__demo_order.sql` for the
-business table. Hibernate is set to `validate`, never `update`.
+migrations as application-owned migrations. `V5__demo_order.sql` remains the business-table
+migration, so canonical NERV migration 005 is copied as
+`V6__nerv_event_outbox_claim_version.sql`. Hibernate is set to `validate`, never `update`.
 
 ## Create orders
 
@@ -136,9 +143,11 @@ mvn verify -Pintegration-tests
 ```
 
 It verifies that `OrderService.createOrder()` commits an order and its starter-managed outbox row
-together, while `createOrderThenFail()` rolls back both. The running Compose flow is the end-to-end
-Kafka and SQS acceptance path; inspect the Inbox rows to verify `OrderCreated` and
-`PaymentRequested` are `PROCESSED`.
+together, while `createOrderThenFail()` rolls back both. It also exercises lease-expiration
+fencing through the public `OutboxService`: a reclaimed row receives a newer claim version, and
+the stale worker can no longer reschedule it. The running Compose flow is the end-to-end Kafka and
+SQS acceptance path; inspect the Inbox rows to verify `OrderCreated` and `PaymentRequested` are
+`PROCESSED`.
 
 Inspect the declared dependencies (the internals shown below the starter are transitive only):
 

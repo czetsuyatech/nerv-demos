@@ -143,15 +143,17 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/nerv-audit/horizontal/UserEntity?offset=2&limit=10",
+              "raw": "http://localhost:8080/managnment/erv-audit/audits/orizontal/UserEntity?offset=2&limit=2",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "8080",
               "path": [
-                "nerv-audit",
-                "horizontal",
+                "managnment",
+                "erv-audit",
+                "audits",
+                "orizontal",
                 "UserEntity"
               ],
               "query": [
@@ -161,7 +163,7 @@
                 },
                 {
                   "key": "limit",
-                  "value": "10"
+                  "value": "2"
                 }
               ]
             }
@@ -174,16 +176,18 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.nerv.envers.persistence.entity.UserEntity?offset=0&limit=10",
+              "raw": "http://localhost:8080/management/nerv-audit/audits/vertical/com.czetsuyatech.nerv.audit.persistence.entity.UserEntity?offset=0&limit=10",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "8080",
               "path": [
+                "management",
                 "nerv-audit",
+                "audits",
                 "vertical",
-                "com.czetsuyatech.nerv.envers.persistence.entity.UserEntity"
+                "com.czetsuyatech.nerv.audit.persistence.entity.UserEntity"
               ],
               "query": [
                 {
@@ -205,16 +209,18 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/nerv-audit/vertical/com.czetsuyatech.nerv.envers.persistence.entity.UserEntity?fieldName=FIRSTNAME&oldValue=Edward&newValue=czetsuya",
+              "raw": "http://localhost:8080/management/nerv-audit/audits/vertical/com.czetsuyatech.nerv.audit.persistence.entity.UserEntity?fieldName=FIRSTNAME&oldValue=Edward&newValue=czetsuya",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "8080",
               "path": [
+                "management",
                 "nerv-audit",
+                "audits",
                 "vertical",
-                "com.czetsuyatech.nerv.envers.persistence.entity.UserEntity"
+                "com.czetsuyatech.nerv.audit.persistence.entity.UserEntity"
               ],
               "query": [
                 {
@@ -542,6 +548,120 @@
                 "feign",
                 "retry",
                 "timeout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Event",
+      "item": [
+        {
+          "name": "Operations",
+          "item": [
+            {
+              "name": "Outbox",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/management/nerv-event/outbox",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "management",
+                    "nerv-event",
+                    "outbox"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Inbox | Failed",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/management/nerv-event/inbox?status=FAILED",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "management",
+                    "nerv-event",
+                    "inbox"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "FAILED"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Normal flow",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customerId\": \"CUST-001\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrayable flow",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customerId\": \"FAIL-PERMANENT\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
               ]
             }
           },

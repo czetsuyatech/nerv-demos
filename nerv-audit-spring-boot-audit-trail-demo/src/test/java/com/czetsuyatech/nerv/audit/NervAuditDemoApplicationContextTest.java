@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
     "nerv.audit.audit-strategy-type=HORIZONTAL",
     "nerv.audit.operations.web.enabled=true"
 })
-class ApplicationContextTest {
+class NervAuditDemoApplicationContextTest {
 
   @Autowired
   private UserService userService;

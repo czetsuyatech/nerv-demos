@@ -16,7 +16,7 @@
     <liquibase.version>5.0.2</liquibase.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
-    <nerv-audit.version>2.0.0</nerv-audit.version>
+    <nerv-audit.version>2.0.1</nerv-audit.version>
   </properties>
 
   <dependencies>

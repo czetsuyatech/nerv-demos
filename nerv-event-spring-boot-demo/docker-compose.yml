@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: nerv_event_demo
+      POSTGRES_DB: nerv_examples
       POSTGRES_USER: nerv
       POSTGRES_PASSWORD: nerv
     ports:
