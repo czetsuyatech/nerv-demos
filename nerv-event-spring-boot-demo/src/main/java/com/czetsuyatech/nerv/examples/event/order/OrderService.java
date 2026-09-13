@@ -52,6 +52,7 @@ public class OrderService {
     eventPublisher.publish(EventPublication.<OrderCreated>builder()
         .event(event)
         .destination(new Destination("orders-kafka"))
+        .orderingKey(order.getId().toString())
         .build());
 
     if (failAfterPublication) {

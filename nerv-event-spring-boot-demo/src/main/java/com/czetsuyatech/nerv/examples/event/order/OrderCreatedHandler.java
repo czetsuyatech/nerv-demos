@@ -47,6 +47,7 @@ public class OrderCreatedHandler implements EventHandler<OrderCreated> {
     eventPublisher.publish(EventPublication.<PaymentRequested>builder()
         .event(payment)
         .destination(new Destination("payments-sqs"))
+        .orderingKey(order.orderId().toString())
         .build());
   }
 }

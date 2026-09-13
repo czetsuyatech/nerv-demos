@@ -67,7 +67,9 @@ The application connects to PostgreSQL at `localhost:5432`, Kafka at `localhost:
 LocalStack at `localhost:4566`. Flyway runs the copied, immutable canonical NERV PostgreSQL
 migrations as application-owned migrations. `V5__demo_order.sql` remains the business-table
 migration, so canonical NERV migration 005 is copied as
-`V6__nerv_event_outbox_claim_version.sql`. Hibernate is set to `validate`, never `update`.
+`V6__nerv_event_outbox_claim_version.sql`, and migration 006 is copied as
+`V7__nerv_event_outbox_ordering_key.sql`. The example publishes the order ID as the ordering key
+for both Kafka order events and SQS payment events. Hibernate is set to `validate`, never `update`.
 
 ## Create orders
 
