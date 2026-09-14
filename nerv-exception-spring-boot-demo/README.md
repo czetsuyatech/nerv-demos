@@ -601,3 +601,7 @@ This demo demonstrates:
 * Custom error code registration
 
 Together these capabilities provide a consistent failure-management strategy across synchronous and asynchronous communication channels.
+
+The demo uses NERV Exception 1.4.0. A full application-context test verifies the HTTP error mappings with Kafka listener
+startup disabled for that test. Boot 4.1.0 / Cloud 2025.1.2 currently requires an explicit compatibility-verifier override;
+this does not establish compatibility of every Cloud feature. Runtime Kafka examples require the Compose broker.

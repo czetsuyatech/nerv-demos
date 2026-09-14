@@ -47,7 +47,6 @@ Additional examples will be added as the NERV ecosystem grows.
 Planned examples include:
 
 - nerv-identity
-- nerv-events
 - nerv-cache
 - nerv-resilience
 - nerv-trade
@@ -58,7 +57,7 @@ Planned examples include:
 
 - Java 21+
 - Maven 3.9+
-- Spring Boot 3.x
+- Spring Boot 4.1.0
 
 Each example may include additional requirements. Refer to the individual project's README for project-specific instructions.
 
@@ -126,3 +125,13 @@ If you'd like to contribute an example or improve an existing one, feel free to 
 ## License
 
 This repository is licensed under the MIT License.
+
+Current demo versions: Audit 2.1.0, Event 2.1.0, Exception 1.4.0. Use Java 21 and `mvn clean verify` after dependency changes.
+
+Run `mvn -Pintegration-tests clean verify` from the repository root for the complete checks, including PostgreSQL vertical
+audit, Kafka/SQS delivery and recovery, outbox rollback and lease fencing. Docker is required for integration tests.
+Horizontal audit and exception HTTP mappings also have application-context coverage. Test infrastructure is isolated
+from existing local databases. See [verification](VERIFICATION.md) for the latest results and remaining limits.
+
+These demos target fresh databases. Liquibase and Flyway initialize the current schema automatically; they do not
+provide upgrade paths from previous demo versions. Use empty demo schemas when starting this version.

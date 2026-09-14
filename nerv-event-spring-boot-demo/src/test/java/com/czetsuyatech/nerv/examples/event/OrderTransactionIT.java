@@ -21,7 +21,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 /** Acceptance test: the application writes its business row and starter-managed outbox atomically. */
-@Testcontainers(disabledWithoutDocker = true)
+@Testcontainers
 @SpringBootTest(properties = {
     "spring.main.web-application-type=none",
     "nerv.event.kafka.enabled=false",
@@ -56,7 +56,9 @@ class OrderTransactionIT {
 
   @Test
   void orderAndOutboxEventCommitTogetherAndBothRollbackTogether() {
-    orders.createOrder("CUST-001");
+    var created = orders.createOrder("CUST-001");
+    assertThat(jdbc.queryForObject("select ordering_key from nerv_outbox_event", String.class))
+        .isEqualTo(created.id().toString());
     assertThat(count("demo_order")).isEqualTo(1);
     assertThat(count("nerv_outbox_event")).isEqualTo(1);
 

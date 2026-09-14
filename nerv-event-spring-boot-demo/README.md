@@ -43,7 +43,7 @@ identities. Business code never selects or calls an SQS client.
 
 - Java 21 and Maven 3.9+
 - Docker Compose
-- A locally available `2.0.0` build of `nerv-event` (from its checkout run
+- A locally available `2.1.0` build of `nerv-event` (from its checkout run
   `mvn clean install` once)
 
 The starter-owned LocalStack SQS clients use the standard AWS credentials provider. Set harmless
@@ -64,12 +64,9 @@ mvn spring-boot:run
 ```
 
 The application connects to PostgreSQL at `localhost:5432`, Kafka at `localhost:9092`, and
-LocalStack at `localhost:4566`. Flyway runs the copied, immutable canonical NERV PostgreSQL
-migrations as application-owned migrations. `V5__demo_order.sql` remains the business-table
-migration, so canonical NERV migration 005 is copied as
-`V6__nerv_event_outbox_claim_version.sql`, and migration 006 is copied as
-`V7__nerv_event_outbox_ordering_key.sql`. The example publishes the order ID as the ordering key
-for both Kafka order events and SQS payment events. Hibernate is set to `validate`, never `update`.
+LocalStack at `localhost:4566`. Flyway creates the current schema with `V1__current_demo_schema.sql`.
+It includes NERV Event 2.1.0 tables, claim fencing and ordering keys, plus the demo order table. Start with an empty
+`nervevent` schema; there is no legacy upgrade chain.
 
 ## Create orders
 
@@ -138,10 +135,10 @@ SELECT * FROM demo_order ORDER BY created_at DESC;
 ## Acceptance tests
 
 The default build compiles the acceptance tests without requiring Docker. Run the PostgreSQL
-transaction acceptance test (Testcontainers skips it automatically when Docker is unavailable):
+and Kafka/SQS acceptance tests (Docker is required):
 
 ```bash
-mvn verify -Pintegration-tests
+mvn clean verify -Pintegration-tests
 ```
 
 It verifies that `OrderService.createOrder()` commits an order and its starter-managed outbox row
@@ -162,3 +159,7 @@ mvn dependency:tree -Dincludes=com.czetsuyatech.nerv
 ```bash
 docker compose down -v
 ```
+
+NERV Event 2.1.0 owns transactional handler/inbox completion and validates outbox dispatcher configuration at startup.
+This demo both publishes and consumes; its application retry policy remains required. Integration tests require Docker
+and no longer silently skip when it is unavailable. Test polling is shortened independently of demonstration defaults.
