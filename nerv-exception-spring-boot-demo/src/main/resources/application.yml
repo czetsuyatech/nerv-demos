@@ -11,6 +11,9 @@ management:
       probability: 1.0
 
 spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false # Boot 4.1 / Cloud 2025.1 compatibility is verified by the demo tests.
   kafka:
     bootstrap-servers: localhost:9092
     producer:

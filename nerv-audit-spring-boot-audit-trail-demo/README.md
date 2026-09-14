@@ -58,3 +58,14 @@ mvn clean test
 
 The H2-backed integration test proves that a starter-only consumer starts, persists an audited
 entity, reads history through `AuditOperations`, and serves the enabled Operations Web endpoint.
+
+## Current setup (NERV Audit 2.1.0)
+
+Use an empty PostgreSQL schema named `nervaudit`. The vertical changelog creates the current audit tables directly
+from NERV's official creation template, including timestamptz timestamps, required fields, constraints and indexes.
+There is no legacy timestamp conversion or upgrade chain. Horizontal mode uses its own changelog; use a separate
+empty schema/database when switching strategies.
+
+Run `mvn -Pintegration-tests clean verify` to check vertical mode against PostgreSQL. Regular tests cover horizontal
+mode on H2. Vertical search takes a fully qualified entity class name, such as
+`com.czetsuyatech.nerv.audit.persistence.entity.UserEntity`; horizontal history is a separate API.

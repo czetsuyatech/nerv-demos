@@ -4,6 +4,12 @@ logging:
     "org.apache": warn
     "com.czetsuyatech.nerv.event": trace
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
 spring:
   application:
     name: nerv-event-spring-boot-demo
@@ -19,16 +25,12 @@ spring:
     open-in-view: false
   flyway:
     enabled: true
+    default-schema: nervevent
+    schemas: nervevent
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
       auto-offset-reset: earliest
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
 
 nerv:
   event:

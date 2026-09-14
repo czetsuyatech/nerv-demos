@@ -14,7 +14,7 @@
   <name>NERV Event Spring Boot Demo</name>
 
   <properties>
-    <nerv-event.version>2.0.0</nerv-event.version>
+    <nerv-event.version>2.1.0</nerv-event.version>
     <skipITs>true</skipITs>
   </properties>
 

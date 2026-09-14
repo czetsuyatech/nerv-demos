@@ -32,8 +32,15 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 /** Full external-consumer path: REST -> outbox -> Kafka -> inbox -> SQS -> inbox. */
-@Testcontainers(disabledWithoutDocker = true)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
+    "nerv.event.dispatcher.polling.min-interval=100ms",
+    "nerv.event.dispatcher.polling.max-interval=500ms",
+    "nerv.event.inbox.retry.initial-delay=1s",
+    "nerv.event.inbox.retry.max-delay=2s",
+    "nerv.event.inbox.dispatcher.polling.min-interval=100ms",
+    "nerv.event.inbox.dispatcher.polling.max-interval=500ms"
+})
 class KafkaAndSqsFlowIT {
 
   @Container static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17-alpine");
@@ -44,6 +51,7 @@ class KafkaAndSqsFlowIT {
   @Autowired private JdbcTemplate jdbc;
   @Autowired private PaymentFailureSwitch failureSwitch;
   @LocalServerPort private int port;
+  private String orderId;
 
   @BeforeAll
   static void awsCredentials() {
@@ -93,6 +101,7 @@ class KafkaAndSqsFlowIT {
 
   private void create(String customerId) {
     assertThat(post("/orders", "{\"customerId\":\"" + customerId + "\"}")).isEqualTo(201);
+    orderId = jdbc.queryForObject("select id from demo_order where customer_id=?", UUID.class, customerId).toString();
   }
 
   private void waitFor(String type, String expectedStatus) {
@@ -110,21 +119,21 @@ class KafkaAndSqsFlowIT {
 
   private String statusFor(String type) {
     try {
-      return jdbc.queryForObject("select status from nerv_inbox_event where event_type = ? order by received_at desc limit 1",
-          String.class, type);
+      return jdbc.queryForObject("select status from nerv_inbox_event where event_type = ? and correlation_id = ? order by received_at desc limit 1",
+          String.class, type, orderId);
     } catch (EmptyResultDataAccessException ignored) {
       return null;
     }
   }
 
   private int attemptsFor(String type) {
-    return jdbc.queryForObject("select attempt_count from nerv_inbox_event where event_type = ? order by received_at desc limit 1",
-        Integer.class, type);
+    return jdbc.queryForObject("select attempt_count from nerv_inbox_event where event_type = ? and correlation_id = ? order by received_at desc limit 1",
+        Integer.class, type, orderId);
   }
 
   private String eventIdFor(String type) {
-    return jdbc.queryForObject("select event_id from nerv_inbox_event where event_type = ? order by received_at desc limit 1",
-        String.class, type);
+    return jdbc.queryForObject("select event_id from nerv_inbox_event where event_type = ? and correlation_id = ? order by received_at desc limit 1",
+        String.class, type, orderId);
   }
 
   private int countForEvent(String eventId) {
